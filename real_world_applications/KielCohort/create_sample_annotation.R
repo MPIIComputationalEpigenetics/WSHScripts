@@ -1,0 +1,11 @@
+files <- list.files('/TL/deep/projects/work/mage/data/nobackup/RRBS/KielCohort/bam/',pattern='.bam',full.names = TRUE)
+index <- list.files('/TL/deep/projects/work/mage/data/nobackup/RRBS/KielCohort/bam/',pattern='.bam.bai',full.names = TRUE)
+files <- files[!files%in%index]
+ids <- strsplit(files,"RRBS_")
+ids <- lapply(ids,function(x)x[2])
+ids <-unlist(ids)
+ids <- strsplit(ids,".bam")
+ids <- lapply(ids,function(x)x[1])
+ids <-unlist(ids)
+ret <- data.frame(sample_name=ids,bam_path=files,library=rep("CALCULATE",239))
+write.csv(ret,"/TL/deep/projects/work/mscherer/projects/heterogeneity/src/scripts/sample_annotation.csv",quote=FALSE,row.names=FALSE)

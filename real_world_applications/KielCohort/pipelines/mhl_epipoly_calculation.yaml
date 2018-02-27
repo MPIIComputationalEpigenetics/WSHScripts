@@ -1,0 +1,31 @@
+tools:
+ samtools: /TL/deep/projects/work/mage/tools/samtools/bin/samtools
+ bismark: /TL/deep/projects/work/mage/tools/bismark/bismark_v0.16.3/bismark
+ methclone: /TL/deep/projects/work/mscherer/projects/heterogeneity/src/methclone/bin/methclone
+ rscript: /TL/deep/projects/work/mage/tools/R/R-3.4.0/bin/Rscript
+ perl: /usr/bin/perl
+
+resources:
+ reference: /TL/deep/projects/work/mage/data/nobackup/RRBS/KielCohort_new/reference
+ roi: /TL/deep/projects/work/mscherer/projects/heterogeneity/KielCohort/annotation/annotation.bed
+ chrom_sizes: /TL/deep/projects/work/mscherer/projects/heterogeneity/KielCohort/annotation/hg38.chrom.sizes
+ cpg_annotation: /TL/deep/projects/work/mscherer/projects/heterogeneity/KielCohort/annotation/HsGenome38.CpG.positions.txt 
+
+parameters:
+ 
+ bismark:
+  bowtie: bowtie1
+  bowtie_path: /TL/deep/projects/work/mage/tools/bowtie/bowtie-1.2/
+  samtools: /TL/deep/projects/work/mage/tools/samtools/bin/
+
+ methclone:
+  meth_diff: 0
+  distance_cutoff: 50
+  coverage: 10
+
+ rscript:
+  conversion: /TL/deep/projects/work/mscherer/projects/heterogeneity/src/methclone/convert_to_epipoly.R
+
+ mhl:
+  to_hapinfo: /TL/deep/projects/work/mscherer/projects/heterogeneity/src/MHL/bam2hapinfo.pl
+  hapinfo_to_mhl: /TL/deep/projects/work/mscherer/projects/heterogeneity/src/MHL/hapinfo2mhl.pl

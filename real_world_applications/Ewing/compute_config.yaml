@@ -1,0 +1,7 @@
+compute:
+ default:
+  submission_template: templates/local_template.sub
+  submission_command: sh
+ sge:
+  submission_template: templates/sge.sub
+  submission_command: qsub
