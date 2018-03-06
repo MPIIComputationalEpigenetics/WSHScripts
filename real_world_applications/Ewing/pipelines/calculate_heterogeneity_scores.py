@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 #####################################################################################################
 #' calculate_heterogeneity_scores.py
 #' This script computes Intra-Sample Heterogeneity Scores from bisulfite sequencing data. This is
@@ -7,7 +9,6 @@
 #' ISH scores FDRP, qFDRP, PDR, Epipolymorphism, Entropy and MHL.
 #####################################################################################################
 
-#!/usr/bin/python
 
 import os
 import pypiper
