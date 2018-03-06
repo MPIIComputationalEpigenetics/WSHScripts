@@ -1,0 +1,4 @@
+metadata:
+ sample_annotation: annotation_generator/sample_annotation_errors.csv
+ output_dir: /TL/deep/projects/work/mscherer/projects/heterogeneity/simulation/results/march_2018/errors/
+ pipelines_dir: .

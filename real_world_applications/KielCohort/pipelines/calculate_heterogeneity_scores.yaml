@@ -1,0 +1,36 @@
+tools:
+ samtools: path_to_samtools
+ trim_galore: path_to_trimGalore
+ cutadapt: path_to_cutadapt
+ bsmap: path_to_bsmap
+ rscript: path_to_rscript
+ perl: path_to_perl
+ methclone: path_to_methclone
+ samtools: path_to_samtools
+
+resources:
+ bisulfite_folder: path_to_hg38
+	# The calculation of the scores requires that the data was processed with RnBeads (http://rnbeads.org). Here you need to specifiy the path to the corresponding RnBSet object, preferrably to the preprocessed set
+ rnb_set: path_to_rnbSet
+ # This is a BED file specifying the positions for which MHL should be calculated
+ roi: path_to_roi
+
+parameters:
+ 
+ rscript:
+  fdrp_script: ../../../scores/FDRP/compute_FDRP.R
+  qfdrp_script: ../../../scores/qFDRP/compute_qFDRP.R
+  pdr_script: ../../../scores/PDR/compute_PDR.R
+  conversion_epipoly: ../../../scores/Epipoly/compute_epipolymorphism.R
+  conversion_entropy: ../../../scores/Entropy/compute_entropy.R
+  convert_bam: ../../../misc/add_bismark_meth_string.R
+  cores: 12
+
+ mhl:
+  to_hapinfo: ../../../scores/MHL/mergedBam2hapInfo_RRBS_v1.0.pl
+  hapinfo_to_mhl: ./../../scores/MHL/hapinfo2mhl.pl
+
+ methclone:
+  meth_diff: 0
+  distance_cutoff: 50
+  coverage: 10

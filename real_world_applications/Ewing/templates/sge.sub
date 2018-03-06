@@ -1,0 +1,9 @@
+#!/bin/bash
+#$ -l slots_free={CORES}
+#$ -l mem_free={MEM}
+#$ -l h_vmem={H_VMEM}
+#$ -e {LOGFILE}
+#$ -o {LOGFILE}
+#$ -N {JOBNAME}
+
+{CODE}

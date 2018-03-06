@@ -1,0 +1,28 @@
+mhl_epipoly_calculation.py:
+ name: heterogeneity
+ looper_args: True
+ arguments:
+  "--output_name" : plain_name
+  "--output_folder" : outfolder
+  "--sample_name" : sample_name
+  "--bam_folder" : bam_folder
+  "--mhl_folder" : mhl_folder
+  "--epipoly_folder" : epipoly_folder 
+ resources:
+  default:
+   file_size: "0"
+   cores: "4"
+   mem: "4000"
+   h_vmem: "10G"
+calculate_heterogeneity_scores.py:
+ name: heterogeneity
+ looper_args: True
+ arguments:
+  "--sample_id" : sample_name
+  "--bam_name" : bam_path
+ resources:
+  default:
+   file_size: "0"
+   cores: "12"
+   mem: "10000"
+   h_vmem: "60G"

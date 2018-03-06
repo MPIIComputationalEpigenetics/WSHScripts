@@ -1,0 +1,4 @@
+metadata:
+ sample_annotation: /TL/deep/projects/work/mscherer/projects/heterogeneity/src/scripts/sample_annotation.csv
+ output_dir: /TL/deep/projects/work/mscherer/projects/heterogeneity/KielCohort/all/
+ pipelines_dir: /TL/deep/projects/work/mscherer/projects/heterogeneity/src/scripts/

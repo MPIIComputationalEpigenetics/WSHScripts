@@ -1,0 +1,104 @@
+simulate_coverage.py:
+ name: simulation
+ looper_args: True
+ arguments:
+  "--sample_id" : sample_name
+  "--chr" : chr
+  "--start" : start
+  "--end" : end
+  "--number" : reads
+ resources:
+  default:
+   file_size: "0"
+   cores: "4"
+   mem: "4000"
+   h_vmem: "10G"
+simulate_cell_types.py:
+ name: simulation
+ looper_args: True
+ arguments:
+  "--sample_id" : sample_name
+  "--chr" : chr
+  "--start" : start
+  "--end" : end
+ resources:
+  default:
+   file_size: "0"
+   cores: "4"
+   mem: "4000"
+   h_vmem: "10G"
+simulate_methylation_switch.py:
+ name: simulation
+ looper_args: True
+ arguments:
+  "--sample_id" : sample_name
+  "--chr" : chr
+  "--start" : start
+  "--end" : end
+ resources:
+  default:
+   file_size: "0"
+   cores: "4"
+   mem: "4000"
+   h_vmem: "10G"
+simulate_CGIs.py:
+ name: simulation
+ looper_args: True
+ arguments:
+  "--sample_id" : sample_name
+  "--chr" : chr
+  "--start" : start
+  "--end" : end
+  "--number" : reads
+ resources:
+  default:
+   file_size: "0"
+   cores: "4"
+   mem: "4000"
+   h_vmem: "10G"
+simulate_read_length.py:
+ name: simulation
+ looper_args: True
+ arguments:
+  "--sample_id" : sample_name
+  "--chr" : chr
+  "--start" : start
+  "--end" : end
+  "--number" : reads
+  "--length" : length
+ resources:
+  default:
+   file_size: "0"
+   cores: "4"
+   mem: "4000"
+   h_vmem: "10G"
+simulate_sequencing_errors.py:
+ name: simulation
+ looper_args: True
+ arguments:
+  "--sample_id" : sample_name
+  "--chr" : chr
+  "--start" : start
+  "--end" : end
+  "--error" : error
+ resources:
+  default:
+   file_size: "0"
+   cores: "4"
+   mem: "4000"
+   h_vmem: "10G"
+simulate_SNPs.py:
+ name: simulation
+ looper_args: True
+ arguments:
+  "--sample_id" : sample_name
+  "--chr" : chr
+  "--start" : start
+  "--end" : end
+  "--snps" : snps
+ resources:
+  default:
+   file_size: "0"
+   cores: "4"
+   mem: "4000"
+   h_vmem: "10G"

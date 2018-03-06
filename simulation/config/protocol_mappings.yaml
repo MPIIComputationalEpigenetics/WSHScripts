@@ -1,0 +1,7 @@
+Coverage: simulate_coverage.py
+CELL_TYPES: simulate_cell_types.py
+SWITCH: simulate_methylation_switch.py
+CGI: simulate_CGIs.py
+Read_Length: simulate_read_length.py
+Errors: simulate_sequencing_errors.py
+SNPs: simulate_SNPs.py

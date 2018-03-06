@@ -1,0 +1,8 @@
+#!/bin/bash
+#$ -l slots_free=4
+#$ -l h_vmem=40G
+#$ -e {LOGFILE}
+#$ -o {LOGFILE}
+#$ -N {JOBNAME}
+
+{CODE}
