@@ -1,25 +1,26 @@
 tools:
- sherman: /TL/deep/projects/work/mscherer/projects/heterogeneity/simulation/tools/Sherman_v0.1.7/Sherman
- bismark: /TL/deep-share/archive00/software/packages/bismark/bismark_v0.13.0/bismark
- bismark_extractor: /TL/deep-share/archive00/software/packages/bismark/bismark_v0.13.0/bismark_methylation_extractor
- samtools: /TL/deep-share/archive00/software/packages/samtools/v1.3/samtools-1.3/samtools
- rscript: /TL/deep-share/archive00/software/packages/R/R-3.3.2/bin/Rscript
- methclone: /TL/deep/projects/work/mscherer/projects/heterogeneity/src/methclone/cluster/bin/methclone
+ sherman: path_to_sherman
+ bismark: path_to_bismark
+ bismark_extractor: path_to_bismark_methylation_extractor
+ samtools: path_to_samtools
+ rscript: path_to_Rscript
+ methclone: path_to_methclone
  perl: /usr/bin/perl
 
 resources:
- genome_folder: /TL/deep/projects/work/mscherer/projects/heterogeneity/simulation/data/reference/GRCh38/genome/
- chrom_sizes: /TL/deep/projects/work/mscherer/projects/heterogeneity/simulation/data/reference/GRCh38/hg38.chrom.sizes
+ #' This should be a path to the reference genome hg38, more specifically to a folder that contains
+ #' each of the chromosomes as a .fa (FASTA) file
+ genome_folder: path_to_genome
  #'bismark_genome_preparation should be executed once before starting the pipeline. The 
  #'resulting folder should then be inserted here
- bisulfite_folder: /TL/deep/projects/work/mscherer/projects/heterogeneity/simulation/data/reference/GRCh38/genome/
+ bisulfite_folder: path_to_genome
 
 parameters:
  
  bismark:
   bowtie: bowtie2
-  bowtie_path: /TL/deep-share/archive00/software/packages/bowtie2/bowtie2-2.2.9/
-  samtools: /TL/deep-share/archive00/software/packages/samtools/v1.3/samtools-1.3/
+  bowtie_path: path_to_bowtie2_folder
+  samtools: path_to_samtools_folder
 
  sherman:
   length: 50

@@ -1,19 +1,25 @@
+#tools:
+# samtools: path_to_samtools
+# rscript: path_to_rscript
+# perl: path_to_perl
+# methclone: path_to_methclone
 tools:
- samtools: path_to_samtools
- trim_galore: path_to_trimGalore
- cutadapt: path_to_cutadapt
- bsmap: path_to_bsmap
- rscript: path_to_rscript
- perl: path_to_perl
- methclone: path_to_methclone
- samtools: path_to_samtools
+ samtools: /TL/deep-share/archive00/software/packages/samtools/v1.3/samtools-1.3/samtools
+ rscript: /TL/deep-share/archive00/software/packages/R/R-3.3.2/bin/Rscript
+ perl: /usr/bin/perl
+ methclone: /TL/deep/projects/work/mscherer/projects/heterogeneity/src/methclone/cluster/bin/methclone
 
+#resources:
+# bisulfite_folder: path_to_hg38
+#	# The calculation of the scores requires that the data was processed with RnBeads (http://rnbeads.org). Here you need to specifiy the path to the corresponding RnBSet object, preferrably to the preprocessed set
+# rnb_set: path_to_rnbSet
+# # This is a BED file specifying the positions for which MHL should be calculated
+# roi: path_to_roi
 resources:
- bisulfite_folder: path_to_hg38
-	# The calculation of the scores requires that the data was processed with RnBeads (http://rnbeads.org). Here you need to specifiy the path to the corresponding RnBSet object, preferrably to the preprocessed set
- rnb_set: path_to_rnbSet
- # This is a BED file specifying the positions for which MHL should be calculated
- roi: path_to_roi
+ chrom_sizes: /TL/deep/projects/work/mscherer/projects/heterogeneity/simulation/data/reference/GRCh38/hg38.chrom.sizes
+ bisulfite_folder: /TL/deep/projects/work/mscherer/projects/heterogeneity/simulation/data/reference/GRCh38/hg38.fa
+ rnb_set: /TL/deep/projects/work/mage/data/nobackup/RRBS/KielCohort_new/report/rnbSet_preprocessed
+ roi: /TL/deep/projects/work/mscherer/projects/heterogeneity/reference/KielCohort_roi.bed
 
 parameters:
  

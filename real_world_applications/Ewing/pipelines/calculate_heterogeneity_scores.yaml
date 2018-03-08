@@ -1,18 +1,33 @@
+#tools:
+# samtools: path_to_samtools
+# trim_galore: path_to_trimGalore
+# cutadapt: path_to_cutadapt
+# bsmap: path_to_bsmap
+# rscript: path_to_rscript
+# perl: path_to_perl
+# methclone: path_to_methclone
 tools:
- samtools: path_to_samtools
- trim_galore: path_to_trimGalore
- cutadapt: path_to_cutadapt
- bsmap: path_to_bsmap
- rscript: path_to_rscript
- perl: path_to_perl
- methclone: path_to_methclone
+ samtools: /TL/deep-share/archive00/software/packages/samtools/v1.3/samtools-1.3/samtools
+ trim_galore: /TL/deep-share/archive00/software/packages/trim_galore_v0.4.2/trim_galore
+ cutadapt: /TL/deep-share/archive00/software/packages/cutadapt/cutadapt-1.4.1/bin/
+ bsmap: /TL/deep-share/archive00/software/packages/bsmap/bsmap-2.89/bsmap
+ bowtie2: /TL/deep-share/archive00/software/packages/bowtie2/bowtie2-2.2.9/
+ bismark_extractor: /TL/deep/projects/work/mage/tools/bismark/bismark_v0.16.3/bismark_methylation_extractor
+ rscript: /TL/deep-share/archive00/software/packages/R/R-3.3.2/bin/Rscript
+ perl: /usr/bin/perl
+ methclone: /TL/deep/projects/work/mscherer/projects/heterogeneity/src/methclone/cluster/bin/methclone
+
+#resources:
+# # The calculation of the scores requires that the data was processed with RnBeads (http://rnbeads.org). Here you need to specifiy the path to the corresponding RnBSet object, preferrably to the preprocessed set
+# rnb_set: path_to_rnbSet
+# # This is a BED file specifying the positions for which MHL should be calculated
+# roi: path_to_roi
+# reference_genome: path_to_hg38
 
 resources:
- # The calculation of the scores requires that the data was processed with RnBeads (http://rnbeads.org). Here you need to specifiy the path to the corresponding RnBSet object, preferrably to the preprocessed set
- rnb_set: path_to_rnbSet
- # This is a BED file specifying the positions for which MHL should be calculated
- roi: path_to_roi
- reference_genome: path_to_hg38
+ rnb_set: /DEEP_fhgfs/projects/mscherer/data/RRBS/Ewing_complete/rnb_report_201712/cluster_run/preprocessing_RnBSet
+ roi: /TL/deep/projects/work/mscherer/projects/heterogeneity/reference/Ewing_roi.bed
+ reference_genome: /TL/deep/projects/work/mscherer/projects/heterogeneity/simulation/data/reference/GRCh38/hg38.fa
 
 parameters:
  trim_galore:
@@ -44,7 +59,7 @@ parameters:
 
  mhl:
   to_hapinfo: ../../../scores/MHL/mergedBam2hapInfo_RRBS_v1.0.pl
-  hapinfo_to_mhl: ./../../scores/MHL/hapinfo2mhl.pl
+  hapinfo_to_mhl: ../../../scores/MHL/hapinfo2mhl.pl
 
  methclone:
   meth_diff: 0
