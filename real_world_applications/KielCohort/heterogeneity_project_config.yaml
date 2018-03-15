@@ -1,5 +1,4 @@
 metadata:
- sample_annotation: sample_annotation_small.csv
-# output_dir: specify_output_folder
- output_dir: /TL/deep/projects/work/mscherer/projects/heterogeneity/KielCohort/march2018/
+ sample_annotation: sample_annotation.csv
+ output_dir: specify_output_folder
  pipelines_dir: .

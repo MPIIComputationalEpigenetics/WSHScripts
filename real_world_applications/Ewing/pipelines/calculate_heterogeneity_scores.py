@@ -29,6 +29,8 @@ manager = pypiper.PipelineManager(name="HETEROGENEITY",
 	outfolder=args.output_parent,
 	args=args)
 
+pipe_folder = os.path.dirname(sys.argv[0])  + "/"
+
 #' We create a folder for each sample individually to avoid problems with lock files
 if not os.path.exists(args.output_parent + "/" + args.sample_id):
 	os.makedirs(args.output_parent + "/" + args.sample_id)
@@ -82,7 +84,7 @@ manager.run(cmd,lock_name=args.sample_id+'locker')
 
 #' Since methclone requires the bam file to contain a methylation call string of the form Z..z...h.. as introduced by bismark, we add this string to the mapped bam file with a custom R script. 
 bismark_bam = sample_folder + "bismark_bam.bam"
-cmd = " ".join([manager.config.tools.rscript, manager.config.parameters.rscript.convert_bam, sorted_bam, sample_folder, "bismark_bam.bam", args.cores, ";rm",sorted_bam])
+cmd = " ".join([manager.config.tools.rscript, pipe_folder + manager.config.parameters.rscript.convert_bam, sorted_bam, sample_folder, "bismark_bam.bam", args.cores, ";rm",sorted_bam])
 manager.run(cmd,lock_name=args.sample_id+"locker1")
 
 #####################################################################################################
@@ -93,17 +95,17 @@ manager.run(cmd,lock_name=args.sample_id+"locker1")
 
 #' Calculate FDRP for the output bam file with the corresponding script. Arguments are specified in calculate_heterogeneity_scores.yaml.
 fdrp = sample_folder + "FDRP/"
-cmd = " ".join([manager.config.tools.rscript,manager.config.parameters.rscript.fdrp_script,"FDRP",fdrp ,bismark_bam, manager.config.resources.rnb_set,args.cores])
+cmd = " ".join([manager.config.tools.rscript,pipe_folder +manager.config.parameters.rscript.fdrp_script,"FDRP",fdrp ,bismark_bam, manager.config.resources.rnb_set,args.cores])
 manager.run(cmd,lock_name=args.sample_id+'locker')
 
 #' Calculate qFDRP for the output bam file with the corresponding script. Arguments are specified in calculate_heterogeneity_scores.yaml.
 qfdrp = sample_folder + "qFDRP/"
-cmd = " ".join([manager.config.tools.rscript,manager.config.parameters.rscript.qfdrp_script,"qFDRP",qfdrp ,bismark_bam, manager.config.resources.rnb_set,args.cores])
+cmd = " ".join([manager.config.tools.rscript,pipe_folder +manager.config.parameters.rscript.qfdrp_script,"qFDRP",qfdrp ,bismark_bam, manager.config.resources.rnb_set,args.cores])
 manager.run(cmd,lock_name=args.sample_id+'locker')
 
 #' Calculate PDR for the output bam file with the corresponding script. Arguments are specified in calculate_heterogeneity_scores.yaml.
 pdr = sample_folder + "PDR/"
-cmd = " ".join([manager.config.tools.rscript,manager.config.parameters.rscript.pdr_script,"PDR",pdr ,bismark_bam, manager.config.resources.rnb_set,args.cores])
+cmd = " ".join([manager.config.tools.rscript,pipe_folder +manager.config.parameters.rscript.pdr_script,"PDR",pdr ,bismark_bam, manager.config.resources.rnb_set,args.cores])
 manager.run(cmd,lock_name=args.sample_id+'locker')
 
 #' Calculate haplotpye information from bismark output with the corresponding script. Arguments are specified in calculate_heterogeneity_scores.yaml. We here use the (updated) scripts from the MHL publication (doi:10.1038/ng.3805).
@@ -111,12 +113,12 @@ mhl_folder = sample_folder + "MHL/"
 hapinfo_output = mhl_folder + "hapinfo.txt"
 roi = sample_folder + "roi.bed"
 os.system("mkdir "+mhl_folder)
-cmd = " ".join([manager.config.tools.perl, manager.config.parameters.mhl.to_hapinfo, manager.config.resources.roi, bismark_bam, "bismark", manager.config.resources.roi, ">", hapinfo_output])
+cmd = " ".join([manager.config.tools.perl, pipe_folder + manager.config.parameters.mhl.to_hapinfo, manager.config.resources.roi, bismark_bam, "bismark", manager.config.resources.roi, ">", hapinfo_output])
 manager.run(cmd,lock_name=args.sample_id+'locker')
 
 #' Calculate MHL from haplotype information also with the scripts from the publication of the MHL score.
 mhl_output = mhl_folder + "mhl.txt"
-cmd = "echo " + hapinfo_output + " > " + mhl_folder + "info_list.txt; " + " ".join([manager.config.tools.perl, manager.config.parameters.mhl.hapinfo_to_mhl, mhl_folder + "info_list.txt", ">", mhl_output])
+cmd = "echo " + hapinfo_output + " > " + mhl_folder + "info_list.txt; " + " ".join([manager.config.tools.perl, pipe_folder + manager.config.parameters.mhl.hapinfo_to_mhl, mhl_folder + "info_list.txt", ">", mhl_output])
 manager.run(cmd,mhl_output)
 
 #' Run methclone (10.1186/s13059-014-0472-5) software with arguments specified in calculate_heterogeneity_scores.yaml
@@ -127,12 +129,12 @@ manager.run(cmd,methclone_output)
 
 #' Calculate epipolymorphism from methclone's output with custom R scripts.
 epipoly_output = epiallele_output + "epipoly.csv"
-cmd = " ".join([manager.config.tools.rscript, manager.config.parameters.rscript.conversion_epipoly, methclone_output, "epipoly", epiallele_output])
+cmd = " ".join([manager.config.tools.rscript,pipe_folder +  manager.config.parameters.rscript.conversion_epipoly, methclone_output, "epipoly", epiallele_output])
 manager.run(cmd,epipoly_output)
 
 #' Calculate methylation entropy from methclone's output with custom R scripts.
 entropy_output = epiallele_output + "entropy.csv"
-cmd = " ".join([manager.config.tools.rscript, manager.config.parameters.rscript.conversion_entropy, methclone_output, "entropy", epiallele_output])
+cmd = " ".join([manager.config.tools.rscript, pipe_folder +manager.config.parameters.rscript.conversion_entropy, methclone_output, "entropy", epiallele_output])
 manager.run(cmd,entropy_output)
 
 #' Cleanup
