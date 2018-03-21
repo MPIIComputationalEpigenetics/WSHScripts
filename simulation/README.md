@@ -10,7 +10,7 @@ This file should guide you how to use the scripts located in the directory to si
 
 ... Simulates ISH scores around annotated (according to UCSC) CpG islands to model possible dependencies on higher CpG densities. In contrast to nature, CpG islands are not unmethylated, but methylation level is randomly selected (methylated or unmethylated), to exclude a possible influence of methylation on the ISH scores.
 
-..* create_coverage.R
+* create_coverage.R
 
 ... Simluates dependecies of the ISH scores on different coverage data sets.
 
