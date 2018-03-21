@@ -331,17 +331,6 @@ for(file in folders){
   data <- rbind(data,temp)
 }
 colnames(data) <- c('Coverage','Epipolymorphism','Entropy')
-for(name1 in colnames(data)){
-  vec <- c()
-  for(name2 in colnames(data)){
-    frame <- data[,c(name1,name2)]
-    frame <- na.omit(frame)
-    cori <- cor(frame[,name1],frame[,name2],method = 'spearman')
-    names(cori) <- name2
-    vec <- c(vec,cori)
-  }
-  cors <- cbind(cors,vec)
-}
 data <- as.data.frame(data)
 cors["Epipolymorphism",] <- cor(data$Epipolymorphism,data$Coverage,method='spearman')
 cors["Entropy",] <- cor(data$Entropy,data$Coverage,method='spearman')
@@ -351,7 +340,7 @@ colnames(result) <- c("Measure","CpG_density","Coverage")
 
 write.csv(result,file.path(plot.path,"spearman_correlations.csv"))
 
-data <- melt(data)
+data <- melt(result)
 colnames(data) <- c("Measure","Feature","Value")
 data$Feature <- as.character(data$Feature)
 data$Feature[data$Feature%in%"CpG_density"] <- "CpG Density"
