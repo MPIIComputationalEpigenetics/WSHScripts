@@ -6,7 +6,6 @@
 #' performing the simulation experiment on coverage dependence are stored as an argument and the
 #' folder where to store the results. This scripts selects from the pipeline folder those cases,
 #' where 25,000 reads were simulated.
-#' as another.
 #' folder.path: path to the results_pipeline folder for the simulation experiment
 #' plot.path: folder to store the results
 #' 
@@ -279,8 +278,8 @@ colors <- rnb.getOption('colors.category')
 temp <- colors[2]
 colors[2] <- colors[5]
 colors[5] <- temp
-cors['FDRP',] <- cor(data$Coverage,data$FDRP,method='spearman')
-cors['qFDRP',] <- cor(data$Coverage,data$qFDRP,method='spearman')
+cors['FDRP',] <- cor(na.omit(data)$Coverage,na.omit(data)$FDRP,method='spearman')
+cors['qFDRP',] <- cor(na.omit(data)$Coverage,na.omit(data)$qFDRP,method='spearman')
 cors['PDR',] <- cor(na.omit(data)$Coverage,na.omit(data)$FDRP,method='spearman')
 
 #' MHL
@@ -335,12 +334,12 @@ data <- as.data.frame(data)
 cors["Epipolymorphism",] <- cor(data$Epipolymorphism,data$Coverage,method='spearman')
 cors["Entropy",] <- cor(data$Entropy,data$Coverage,method='spearman')
 
-result <- cbind(result,cors)
+result <- data.frame(row.names(result),result,cors)
 colnames(result) <- c("Measure","CpG_density","Coverage")
 
 write.csv(result,file.path(plot.path,"spearman_correlations.csv"))
 
-data <- melt(result)
+data <- melt(result,id="Measure")
 colnames(data) <- c("Measure","Feature","Value")
 data$Feature <- as.character(data$Feature)
 data$Feature[data$Feature%in%"CpG_density"] <- "CpG Density"
