@@ -30,7 +30,7 @@ This file should guide you how to use the scripts located in the directory to si
 
 	Simluates a region that changes its methylation state from one extreme to the other (unmethlyated -> methylated or vice versa) thus introducing a region of random length showing intermediate methylation values. The ISH scores should be higher in such a region.
 
-After selecting one of the scenarios, you need to create the sample annotation sheet, which is one the inputs to the scripts and also is responsible for (optinal) distribution of the individual jobs across a scientific compute cluster. This can be done by employing the corresponding script.
+After selecting one of the scenarios, you need to create the sample annotation sheet, which is one the inputs to the scripts and also is responsible for (optional) distribution of the individual jobs across a scientific compute cluster. This can be done by employing the corresponding script.
 
 ```
 Rscript your_scenario.R

@@ -6,7 +6,7 @@ tools:
 
 resources:
  bisulfite_folder: path_to_hg38
-	# The calculation of the scores requires that the data was processed with RnBeads (http://rnbeads.org). Here you need to specifiy the path to the corresponding RnBSet object, preferrably to the preprocessed set
+ # The calculation of the scores requires that the data was processed with RnBeads (http://rnbeads.org). Here you need to specifiy the path to the corresponding RnBSet object, preferrably to the preprocessed set
  rnb_set: path_to_rnbSet
  # This is a BED file specifying the positions for which MHL should be calculated
  roi: path_to_roi

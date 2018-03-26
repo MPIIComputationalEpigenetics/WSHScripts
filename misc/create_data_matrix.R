@@ -19,11 +19,11 @@ sample.names <- sample.names[!grepl("[.]",sample.names)]
 
 #' This script contains three parts:
 #' (i):		First we summarize the values for FDRP, qFDRP and PDR, since those scores produce scores
-#'     		for the same annotation and therefore can be combined together into a single data matrix
+#'     		for the same annotation and therefore also produce matrices of the same dimension. Each
+#' 			of the matrices is stored separately as a CSV file
 #' (ii): 	Then we summarize the values for MHL, which also produces scores for single CpGs but 
 #' 		 	produces a data matrix of a different dimension than the first. The annotation is not the
-#'			same for all samples, thus we select the largest file and
-#'          use this as the base annotation
+#'			same for all samples, thus we select the largest file and use this as the base annotation
 #' (iii):	Last, we summarize the values for Epipolymorphism and Entropy, which have the following
 #'			drawbacks: no single CpG, but for 4 CpGs, thus overlapping annotation is produced. 
 #'          Also the annotation is not the same for all samples, thus we select the largest file and
@@ -62,8 +62,6 @@ for(i in 1:length(sample.names)){
     which.max <- name
   }
 }
-which.max
-#EwS_T141
 
 complete.data <- c()
 i <- 1

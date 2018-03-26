@@ -1,5 +1,11 @@
 #!/usr/bin/python
 
+#####################################################################################################
+#' simulate_sequencing_errors.py
+#' This script describes the pipeline used to model possible dependencies of the ISH scores on
+#' sequencing errors.
+#####################################################################################################
+
 import os
 import pypiper
 import argparse

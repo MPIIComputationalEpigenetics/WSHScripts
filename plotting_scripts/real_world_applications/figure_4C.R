@@ -1,5 +1,5 @@
 #####################################################################################################
-#' figure_4B.R
+#' figure_4C.R
 #'---------------------------------------------------------------------------------------------------
 #' This scripts produces Figure 4C from the manuscript. You need to specify the folders, where you 
 #' stored the data matrices for the Ewing data set. You should have produced the score with the

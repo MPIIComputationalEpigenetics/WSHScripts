@@ -1,5 +1,5 @@
 #######################################################################################################
-#' coverage_dependence.R
+#' CpG_density_coverage.R
 #-----------------------------------------------------------------------------------------------------
 #' This scripts produces a plot similar to Figure 1D to visualize the overall dependence of the scores
 #' on site-wise coverage and CpG density. You should specify the folder, where the results of
