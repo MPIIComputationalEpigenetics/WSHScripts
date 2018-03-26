@@ -22,6 +22,6 @@ Contains the implementation of the scores.
 
 Contains the pipelines used to compare the ISH scores on synthetic data.
 
-##License
+## License
 
 Please note that the GNU GPL-3 license applies to all of the code in this repository with the exception of the MHL scripts, which are located in *scores/MHL* and whose license/permission to use is stated in the source files.
