@@ -1,3 +1,5 @@
+gpl-3.0
+
 GNU GPL-3
 
 This software is distributed under the GNU GPL-3 license and thus permission to use, copy, change and further distribute the software is granted. A notable exceptions are the scripts used for calculation of MHL (in scores/ML; distribution policy mentioned in the source code). 
