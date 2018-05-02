@@ -1,11 +1,11 @@
 library(RnBeads)
 anno <- rnb.get.annotation('CpG','hg38')
-lengths <- lengths(anno)
+lengths <- unlist(lapply(anno,function(x){max(end(x))}))
 starts <- unlist(lapply(anno,function(x){min(start(x))}))
 names(starts) <- names(lengths)
 data <- matrix(nrow=1200,ncol=6)
 lengths <- lengths[-c(22,23,24)]
-complete <- sum(lengths)
+complete <- sum(as.numeric(lengths))
 probs <- lengths/complete
 i <- 0
 while(i<1200){
