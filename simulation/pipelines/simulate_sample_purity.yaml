@@ -24,9 +24,8 @@ parameters:
 
  sherman:
   length: 50
-  number: 25000
   CH: 77
-  error_rate: 0
+  error_rate: 1
   quality: 40
 
  rscript:

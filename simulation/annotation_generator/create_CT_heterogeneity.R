@@ -3,12 +3,12 @@ anno <- rnb.get.annotation('CpG','hg38')
 lengths <- unlist(lapply(anno,function(x){max(end(x))}))
 starts <- unlist(lapply(anno,function(x){min(start(x))}))
 names(starts) <- names(lengths)
-data <- matrix(nrow=100,ncol=4)
+data <- matrix(nrow=1000,ncol=4)
 lengths <- lengths[-c(22,23,24)]
 complete <- sum(as.numeric(lengths))
 probs <- lengths/complete
 i <- 0
-while(i<100){
+while(i<1000){
   print(i)
   chrom <- sample(names(lengths),1,prob=probs)
   start <- sample((starts[chrom]+100000):lengths[chrom]-100000,1)
@@ -22,12 +22,11 @@ while(i<100){
     next
   }
   end <- start+50000
-  #j <- sample(20000:50000,1)
   id <- paste(chrom,start,sep='_')
   line <- c(ID=id,Chr=chrom,Start=start,End=end)
-  data[i+1,] <- line
   i <- i+1
+	data[i,] <- line
 }
-data <- data.frame(data,rep('SWITCH',100))
+data <- data.frame(data,rep('CT_HETERO',1000))
 colnames(data) <- c('sample_name','chr','start','end','library')
-write.csv(data,'sample_annotation_switch.csv',quote=FALSE,row.names=FALSE)
+write.csv(data,'sample_annotation_CT_HETERO.csv',quote=FALSE,row.names=FALSE)

@@ -13,49 +13,6 @@ simulate_coverage.py:
    cores: "4"
    mem: "4000"
    h_vmem: "10G"
-simulate_cell_types.py:
- name: simulation
- looper_args: True
- arguments:
-  "--sample_id" : sample_name
-  "--chr" : chr
-  "--start" : start
-  "--end" : end
- resources:
-  default:
-   file_size: "0"
-   cores: "4"
-   mem: "4000"
-   h_vmem: "10G"
-simulate_methylation_switch.py:
- name: simulation
- looper_args: True
- arguments:
-  "--sample_id" : sample_name
-  "--chr" : chr
-  "--start" : start
-  "--end" : end
- resources:
-  default:
-   file_size: "0"
-   cores: "4"
-   mem: "4000"
-   h_vmem: "10G"
-simulate_CGIs.py:
- name: simulation
- looper_args: True
- arguments:
-  "--sample_id" : sample_name
-  "--chr" : chr
-  "--start" : start
-  "--end" : end
-  "--number" : reads
- resources:
-  default:
-   file_size: "0"
-   cores: "4"
-   mem: "4000"
-   h_vmem: "10G"
 simulate_read_length.py:
  name: simulation
  looper_args: True
@@ -87,7 +44,7 @@ simulate_sequencing_errors.py:
    cores: "4"
    mem: "4000"
    h_vmem: "10G"
-simulate_SNPs.py:
+simulate_CT_heterogeneity.py:
  name: simulation
  looper_args: True
  arguments:
@@ -95,7 +52,20 @@ simulate_SNPs.py:
   "--chr" : chr
   "--start" : start
   "--end" : end
-  "--snps" : snps
+ resources:
+  default:
+   file_size: "0"
+   cores: "4"
+   mem: "4000"
+   h_vmem: "10G"
+simulate_sample_purity.py:
+ name: simulation
+ looper_args: True
+ arguments:
+  "--sample_id" : sample_name
+  "--chr" : chr
+  "--start" : start
+  "--end" : end
  resources:
   default:
    file_size: "0"
