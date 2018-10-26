@@ -29,6 +29,8 @@ manager = pypiper.PipelineManager(name="SIMULATION",
 if not os.path.exists(args.output_parent + "/" + args.sample_id):
 	os.makedirs(args.output_parent + "/" + args.sample_id)
 
+pipe_folder = os.path.dirname(sys.argv[0])  + "/"
+
 # Select the region we want to analyze
 files = os.listdir(manager.config.resources.genome_folder)
 args.chr = str(args.chr)
@@ -178,17 +180,17 @@ manager.run(cmd,lock_name=args.sample_id+'locker')
 
 # Calculate FDRP for the output bam file
 fdrp = args.output_parent + "/" + args.sample_id + '/FDRP/'
-cmd = manager.config.tools.rscript + ' ' + manager.config.parameters.rscript.fdrp_script + ' FDRP ' + fdrp + " " + sorted_bam + ' ' + args.output_parent + "/" + args.sample_id + '/rnbSet.zip ' + str(manager.config.parameters.rscript.cores)
+cmd = manager.config.tools.rscript + ' ' + pipe_folder + manager.config.parameters.rscript.fdrp_script + ' FDRP ' + fdrp + " " + sorted_bam + ' ' + args.output_parent + "/" + args.sample_id + '/rnbSet.zip ' + str(manager.config.parameters.rscript.cores)
 manager.run(cmd,lock_name=args.sample_id+'locker')
 
 # Calculate qFDRP for the output bam file
 qfdrp = args.output_parent + "/" + args.sample_id + '/qFDRP/'
-cmd = manager.config.tools.rscript + ' ' + manager.config.parameters.rscript.qfdrp_script + ' qFDRP ' + qfdrp + " " + sorted_bam + ' '+ args.output_parent + "/" + args.sample_id + '/rnbSet.zip ' + str(manager.config.parameters.rscript.cores)
+cmd = manager.config.tools.rscript + ' ' + pipe_folder + manager.config.parameters.rscript.qfdrp_script + ' qFDRP ' + qfdrp + " " + sorted_bam + ' '+ args.output_parent + "/" + args.sample_id + '/rnbSet.zip ' + str(manager.config.parameters.rscript.cores)
 manager.run(cmd,lock_name=args.sample_id+'locker')
 
 # Calculate PDR for the output bam file
 pdr = args.output_parent + "/" + args.sample_id + '/PDR/'
-cmd = manager.config.tools.rscript + ' ' + manager.config.parameters.rscript.pdr_script + ' PDR ' + pdr + " " + sorted_bam + ' ' + args.output_parent + "/" + args.sample_id + '/rnbSet.zip ' + str(manager.config.parameters.rscript.cores)
+cmd = manager.config.tools.rscript + ' ' + pipe_folder + manager.config.parameters.rscript.pdr_script + ' PDR ' + pdr + " " + sorted_bam + ' ' + args.output_parent + "/" + args.sample_id + '/rnbSet.zip ' + str(manager.config.parameters.rscript.cores)
 manager.run(cmd,lock_name=args.sample_id+'locker')
 
 #' Create MHL region of interest
@@ -196,12 +198,12 @@ roi = args.output_parent + "/" + args.sample_id
 roi += "/roi.bed"
 hapinfo_output = args.output_parent + "/" + args.sample_id + '/hapinfo.txt'
 os.environ['PATH'] = manager.config.parameters.bismark.samtools + ':' + os.environ['PATH']
-cmd = " ".join([manager.config.tools.perl, manager.config.parameters.mhl.to_hapinfo, roi, sorted_bam, "bismark", roi, '>', hapinfo_output])
+cmd = " ".join([manager.config.tools.perl, pipe_folder + manager.config.parameters.mhl.to_hapinfo, roi, sorted_bam, "bismark", roi, '>', hapinfo_output])
 manager.run(cmd,hapinfo_output)
 
 #' Calculate MHL from haplotype information
 mhl_output = args.output_parent + "/" + args.sample_id + '/mhl.txt'
-cmd = 'echo ' + hapinfo_output + " > " + args.output_parent + "/" + args.sample_id + "/info_list.txt; " + " ".join([manager.config.tools.perl, manager.config.parameters.mhl.hapinfo_to_mhl, args.output_parent + "/" + args.sample_id + "/info_list.txt", '>', mhl_output])
+cmd = 'echo ' + hapinfo_output + " > " + args.output_parent + "/" + args.sample_id + "/info_list.txt; " + " ".join([manager.config.tools.perl, pipe_folder + manager.config.parameters.mhl.hapinfo_to_mhl, args.output_parent + "/" + args.sample_id + "/info_list.txt", '>', mhl_output])
 manager.run(cmd,mhl_output)
 
 # Run methclone software
@@ -211,12 +213,12 @@ manager.run(cmd,methclone_output)
 
 #' Calculate epipolymorphism from methclone's output and remove this
 epipoly_output = args.output_parent + "/" + args.sample_id + 'epipoly.csv'
-cmd = " ".join([manager.config.tools.rscript, manager.config.parameters.rscript.conversion_epipoly, methclone_output, 'epipoly', args.output_parent + "/" + args.sample_id])
+cmd = " ".join([manager.config.tools.rscript, pipe_folder + manager.config.parameters.rscript.conversion_epipoly, methclone_output, 'epipoly', args.output_parent + "/" + args.sample_id])
 manager.run(cmd,epipoly_output)
 
 #' Calculate methylation entropy from methclone's output and remove this
 entropy_output = args.output_parent + "/" + args.sample_id + 'entropy.csv'
-cmd = " ".join([manager.config.tools.rscript, manager.config.parameters.rscript.conversion_entropy, methclone_output, 'entropy', args.output_parent + "/" + args.sample_id + "/"])
+cmd = " ".join([manager.config.tools.rscript, pipe_folder + manager.config.parameters.rscript.conversion_entropy, methclone_output, 'entropy', args.output_parent + "/" + args.sample_id + "/"])
 manager.run(cmd,entropy_output)
 
 #" Stop pipeline
