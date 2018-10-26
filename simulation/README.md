@@ -2,9 +2,9 @@
 
 This file should guide you how to use the scripts located in the directory to simulate a specific scenario and then to test the ISH scores FDRP, qFDRP, PDR, Epipolymorphism, Entropy and MHL on the simulated data. First, you should select one of the scenarios you want to simulate. Those are located in *annotation_generator* and briefly described here. 
 
-* create_cell_types.R
+* create_CT_heterogeneity.R
 
-	Simulates two cell types that share the methylation level over most of the 50kb region (randomly methylated or unmethylated), but one cell type has a random methylation level in a subregion of random length within the region. This could potentially lead to a differentially methylated region between the two simulated cell types.
+	Simulates a randomly selected number of cell types (between 2 and 10) and introduces a methylation switch in each of the cell types therefore creating a truly heterogeneous region (THR). With probability 50%, the methylation state does not change, then we call this a negative example. Number of cell types and whether it it a negative control is stored in the file numCT.txt, the THR location is stored in dmr_location.txt in the cell types folders.
 
 * create_CGI_region.R
 
