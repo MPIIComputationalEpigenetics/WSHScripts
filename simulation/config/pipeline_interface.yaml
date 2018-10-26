@@ -72,3 +72,17 @@ simulate_sample_purity.py:
    cores: "4"
    mem: "4000"
    h_vmem: "10G"
+simulate_ASM.py:
+ name: simulation
+ looper_args: True
+ arguments:
+  "--sample_id" : sample_name
+  "--chr" : chr
+  "--start" : start
+  "--end" : end
+ resources:
+  default:
+   file_size: "0"
+   cores: "4"
+   mem: "4000"
+   h_vmem: "10G"

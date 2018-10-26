@@ -3,3 +3,4 @@ Read_Length: simulate_read_length.py
 Errors: simulate_sequencing_errors.py
 CT_HETERO: simulate_CT_heterogeneity.py
 SAMPLE_PURITY: simulate_sample_purity.py
+ASM: simulate_ASM.py
