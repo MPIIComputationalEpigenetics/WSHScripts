@@ -4,11 +4,19 @@ This file should guide you how to use the scripts located in the directory to si
 
 * create_CT_heterogeneity.R
 
-	Simulates a randomly selected number of cell types (between 2 and 10) and introduces a methylation switch in each of the cell types therefore creating a truly heterogeneous region (THR). With probability 50%, the methylation state does not change, then we call this a negative example. Number of cell types and whether it it a negative control is stored in the file numCT.txt, the THR location is stored in dmr_location.txt in the cell types folders.
+	Simulates a randomly selected number of cell types (between 2 and 10) and introduces a methylation switch in each of the cell types therefore creating a truly heterogeneous region (THR). With probability 50%, the methylation state does not change, then we call this a negative example. Number of cell types and whether it it a negative control is stored in the file *numCT.txt*, the THR location is stored in *dmr_location.txt* in the cell types folders.
 
-* create_CGI_region.R
+* create_sample_purity.R
 
-	Simulates ISH scores around annotated (according to UCSC) CpG islands to model possible dependencies on higher CpG densities. In contrast to nature, CpG islands are not unmethylated, but methylation level is randomly selected (methylated or unmethylated), to exclude a possible influence of methylation on the ISH scores.
+	Simulates a contaminating cell type in a population of cells that appears to be pure. The contamination has a different methylation state in a randomly selected region (defined as the THR). This location is stored in *contamination/dmr/dmr_location.txt*, the simulated sample purity (between 50 and 100%) and whether it is a negative control in *purity.txt*.
+
+* create_ASM.R
+
+	Simulates a region exhibiting allele-specific methylation by creating two cell types (here rather alleles), one of them switching the methylation state, while the other remains constant over the region. The location of the ASM region and if its a negative control or not are stored in *asm/asm_location.txt*.
+
+* create_erosion.R
+
+	Simulates DNA methylation erosion by stochastically introducing methylated or non methylated CpGs (by a random parameter **alpha**) in a defined region. This region is then replicated **gamma** times to simulate stochasticity of selecting reads for sequencing. All those parameters, whether the region is a negative control or not, and the location of the THR is stored in the folder.
 
 * create_coverage.R
 
@@ -22,13 +30,6 @@ This file should guide you how to use the scripts located in the directory to si
 
 	Randomly introduces artificial sequencing errors into the reads to model dependency of the ISH score on this phenomenon. Here, the sequencing error level is stepwise increased from 1 to 10 percent.
 
-* create_snps.R
-
-	Similar to sequencing errors, a defined number of SNPs is introduced into the read to model dependency of the scores on this characteristic.
-
-* create_switch.R
-
-	Simluates a region that changes its methylation state from one extreme to the other (unmethlyated -> methylated or vice versa) thus introducing a region of random length showing intermediate methylation values. The ISH scores should be higher in such a region.
 
 After selecting one of the scenarios, you need to create the sample annotation sheet, which is one the inputs to the scripts and also is responsible for (optional) distribution of the individual jobs across a scientific compute cluster. This can be done by employing the corresponding script.
 
