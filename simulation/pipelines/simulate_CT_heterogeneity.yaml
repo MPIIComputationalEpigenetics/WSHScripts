@@ -23,6 +23,7 @@ parameters:
   samtools: path_to_samtools_folder
 
  sherman:
+  number: 25000
   length: 50
   CH: 77
   error_rate: 1
