@@ -1,54 +1,48 @@
 tools:
- sherman: /TL/deep/projects/work/mscherer/projects/heterogeneity/simulation/tools/Sherman_v0.1.7/Sherman
- bismark: /TL/deep-share/archive00/software/packages/bismark/bismark_v0.13.0/bismark
- bismark_extractor: /TL/deep-share/archive00/software/packages/bismark/bismark_v0.13.0/bismark_methylation_extractor
- bismark_genome_preparation: /TL/deep-share/archive00/software/packages/bismark/bismark_v0.13.0/bismark_genome_preparation
- samtools: /TL/deep-share/archive00/software/packages/samtools/v1.3/samtools-1.3/samtools
- rscript: /TL/deep-share/archive00/software/packages/R/R-3.5.1/bin/Rscript
- methclone: /TL/deep/projects/work/mscherer/projects/heterogeneity/src/methclone/cluster/bin/methclone
+ sherman: path_to_sherman
+ bismark: path_to_bismark
+ bismark_extractor: path_to_bismark_methylation_extractor
+ samtools: path_to_samtools
+ rscript: path_to_Rscript
+ methclone: path_to_methclone
  perl: /usr/bin/perl
 
 resources:
- genome_folder: /TL/deep/projects/work/mscherer/projects/heterogeneity/simulation/data/reference/GRCh38/genome/
- chrom_sizes: /TL/deep/projects/work/mscherer/projects/heterogeneity/simulation/data/reference/GRCh38/hg38.chrom.sizes
- bisulfite_folder: /TL/deep/projects/work/mscherer/projects/heterogeneity/simulation/data/reference/GRCh38/genome/
+ #' This should be a path to the reference genome hg38, more specifically to a folder that contains
+ #' each of the chromosomes as a .fa (FASTA) file
+ genome_folder: path_to_genome
+ #'bismark_genome_preparation should be executed once before starting the pipeline. The 
+ #'resulting folder should then be inserted here
+ bisulfite_folder: path_to_genome
 
 parameters:
  
  bismark:
   bowtie: bowtie2
-  bowtie_path: /TL/deep-share/archive00/software/packages/bowtie2/bowtie2-2.2.9/
-  samtools: /TL/deep-share/archive00/software/packages/samtools/v1.3/samtools-1.3/
+  bowtie_path: path_to_bowtie2_folder
+  samtools: path_to_samtools_folder
 
  sherman:
-  length: 50
   number: 25000
-  CG1: 5
-  CG2: 95
+  length: 50
   CH: 77
-  error_rate: 1 
+  error_rate: 0
   quality: 40
 
  rscript:
-  fdrp_script: /TL/deep/projects/work/mscherer/projects/heterogeneity/src/FDRP/src/run_cluster_script.R
-  qfdrp_script: /TL/deep/projects/work/mscherer/projects/heterogeneity/src/FDRP/v2/src/run_cluster_script.R
-  create_rnb: /TL/deep/projects/work/mscherer/projects/heterogeneity/simulation/src/create_rnbSet.R
-  pdr_script: /TL/deep/projects/work/mscherer/projects/heterogeneity/src/PDR/main.R
-  conversion: /TL/deep/projects/work/mscherer/projects/heterogeneity/src/methclone/convert_to_epipoly.R
-  roi: /TL/deep/projects/work/mscherer/projects/heterogeneity/simulation/src/roi.R
+  fdrp_script: ../../scores/FDRP/compute_FDRP.R
+  qfdrp_script: ../../scores/qFDRP/compute_qFDRP.R
+  create_rnb: ../../misc/create_rnbSet.R
+  pdr_script: ../../scores/PDR/compute_PDR.R
   cores: 1
-  conversion_epipoly: /TL/deep/projects/work/mscherer/projects/heterogeneity/src/methclone/convert_to_epipoly.R
-  conversion_entropy: /TL/deep/projects/work/mscherer/projects/heterogeneity/src/methclone/convert_to_entropy.R
-  rlib: /TL/deep/projects/work/mscherer/projects/RnBeads/R/R-3.5.1/
+  conversion_epipoly: ../../scores/Epipoly/compute_epipolymorphism.R
+  conversion_entropy: ../../scores/Entropy/compute_entropy.R
   
  mhl:
-  to_hapinfo: /TL/deep/projects/work/mscherer/projects/heterogeneity/src/MHL/mergedBam2hapInfo_RRBS_v1.0.pl
-  hapinfo_to_mhl: /TL/deep/projects/work/mscherer/projects/heterogeneity/src/MHL/hapinfo2mhl.pl
+  to_hapinfo: ../../scores/MHL/mergedBam2hapInfo_RRBS_v1.0.pl
+  hapinfo_to_mhl: ../../scores/MHL/hapinfo2mhl.pl
 
  methclone:
   meth_diff: 0
   distance_cutoff: 50
   coverage: 10
-
- misc:
-  ld: /TL/deep/opt/share/archive00/software/packages/curl/curl-7.47.1/instCurl/lib:/TL/deep/opt/share/archive00/software/packages/curl/curl-7.47.1/instCurl/lib
