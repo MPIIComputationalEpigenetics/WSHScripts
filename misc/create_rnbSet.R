@@ -13,7 +13,8 @@ folder <- cmds[1]
 data.source <- c(file.path(folder,'covs'),file.path(folder,'sample_annotation.csv'),'filename')
 rnb.options(identifiers.column='sample_id',
 	import.bed.style='bismarkCov',
-	assembly='hg38')
+	assembly='hg38',
+	disk.dump.bigff=F)
 rnb.set <- rnb.execute.import(data.source=data.source,data.type='bs.bed.dir')
 save.rnb.set(rnb.set,file.path(folder,'rnbSet'))
 anno <- annotation(rnb.set)
