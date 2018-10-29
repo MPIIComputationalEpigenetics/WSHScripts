@@ -4,11 +4,11 @@ This file should guide you how to use the scripts located in the directory to si
 
 * create_CT_heterogeneity.R
 
-	Simulates a randomly selected number of cell types (between 2 and 10) and introduces a methylation switch in each of the cell types therefore creating a truly heterogeneous region (THR). With probability 50%, the methylation state does not change, then we call this a negative example. Number of cell types and whether it it a negative control is stored in the file *numCT.txt*, the THR location is stored in *dmr_location.txt* in the cell types folders.
+	Simulates a randomly selected number of cell types (between 2 and 10) and introduces a methylation switch in each of the cell types therefore creating a truly heterogeneous region (THR). With probability 50%, the methylation state does not change, then we call this a negative example. Number of cell types and whether it is a negative control is stored in the file *numCT.txt*, the THR location is stored in *dmr_location.txt* in the cell types folders.
 
 * create_sample_purity.R
 
-	Simulates a contaminating cell type in a population of cells that appears to be pure. The contamination has a different methylation state in a randomly selected region (defined as the THR). This location is stored in *contamination/dmr/dmr_location.txt*, the simulated sample purity (between 50 and 100%) and whether it is a negative control in *purity.txt*.
+	Simulates a contaminating cell type in a population of cells that appears to be pure. The contamination has a different methylation state in a randomly selected region (defined as the THR). This location is stored in *contamination/dmr/dmr_location.txt*; the simulated sample purity (between 50 and 100%) and whether it is a negative control in *purity.txt*.
 
 * create_ASM.R
 
@@ -33,13 +33,20 @@ This file should guide you how to use the scripts located in the directory to si
 
 After selecting one of the scenarios, you need to create the sample annotation sheet, which is one the inputs to the scripts and also is responsible for (optional) distribution of the individual jobs across a scientific compute cluster. This can be done by employing the corresponding script.
 
-```
+```bash
 Rscript your_scenario.R
 ```
 
 **NOTE:** The RnBeads package (https://www.bioconductor.org/packages/release/bioc/html/RnBeads.html), as well as the annotation package RnBeads.hg38 (https://www.bioconductor.org/packages/release/data/experiment/html/RnBeads.hg38.html), need to be installed in the R installation you are using.
 
 Next, you'll need to add the path to the produced sample annotation sheet in the first line of *simulation_project_config.yaml* as your sample annotation sheet. Please also specify your output folder in this file.
+
+```yaml
+metadata:
+ sample_annotation: annotation_generator/YOUR_SCENARIO.csv
+ output_dir: YOUR_OUTPUT_DIRECTORY
+ pipelines_dir: .
+```
 
 Since you selected one of the scenarios, you then need to modify the corresponding configuration file (.yaml) in *pipelines*. Here you need to add paths to certain files, for instance to bismark, samtools and methclone (https://genomebiology.biomedcentral.com/articles/10.1186/s13059-014-0472-5). Please install those tools, if you haven't done so yet. 
 
@@ -49,4 +56,4 @@ If you employ your pipeline on a Sun Grid Engine (SGE), you are ready to go. Fir
 looper run --compute sge simulation_project_config.yaml
 ```
 
-Leaving `--compute sge` out, you'll employ the pipelines sequentially on your machine. If you have another scientific compute cluster configuration, please read in the looper documentation on how to adjust *compute_config.yaml* to your setting.
+Leaving `--compute sge` out, you'll employ the pipelines sequentially on your machine. If you have another scientific compute cluster configuration, please read in the looper documentation (http://looper.readthedocs.io) on how to adjust *compute_config.yaml* to your setting.
