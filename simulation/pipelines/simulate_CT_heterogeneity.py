@@ -167,6 +167,7 @@ cmd = 'mkdir ' + covs + '; ' + manager.config.tools.bismark_extractor + ' -o ' +
 manager.run(cmd,covs)
 
 # Create and store rnbSet
+os.environ['LD_LIBRARY_PATH'] = manager.config.parameters.misc.ld
 cmd = 'rm ' + covs + '*.txt; rm ' + covs + '*.png; rm ' + covs + '*.bedGraph; '+ 'echo "sample_id,filename\nTest,all_merged.bismark.cov" > ' + args.output_parent + "/" + args.sample_id + '/sample_annotation.csv; ' +  manager.config.tools.rscript + ' ' + pipe_folder + manager.config.parameters.rscript.create_rnb + ' ' + args.output_parent + "/" + args.sample_id + "; rm " + args.output_parent + "/" + args.sample_id + "/sample_annotation.csv"
 manager.run(cmd,lock_name=args.sample_id+'locker')
 

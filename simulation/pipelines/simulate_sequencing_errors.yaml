@@ -45,3 +45,6 @@ parameters:
   meth_diff: 0
   distance_cutoff: 50
   coverage: 10
+
+ misc:
+  ld: ld_library_path:$LD_LIBRARY_PATH
