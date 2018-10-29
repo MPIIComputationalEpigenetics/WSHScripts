@@ -26,7 +26,7 @@ parameters:
   number: 25000
   length: 50
   CH: 77
-  error_rate: 0
+  error_rate: 1
   quality: 40
 
  rscript:
