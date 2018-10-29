@@ -29,4 +29,4 @@ while(i<1000){
 }
 data <- data.frame(data,rep('SAMPLE_PURITY',1000))
 colnames(data) <- c('sample_name','chr','start','end','library')
-write.csv(data,'sample_annotation.csv',quote=FALSE,row.names=FALSE)
+write.csv(data,'sample_annotation_purity.csv',quote=FALSE,row.names=FALSE)

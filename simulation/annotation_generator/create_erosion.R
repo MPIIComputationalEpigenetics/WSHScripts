@@ -29,4 +29,4 @@ while(i<1000){
 }
 data <- data.frame(data,rep('EROSION',1000))
 colnames(data) <- c('sample_name','chr','start','end','library')
-write.csv(data,'/TL/deep/projects/work/mscherer/projects/heterogeneity/simulation/src/correct_simulation/erosion/sample_annotation.csv',quote=FALSE,row.names=FALSE)
+write.csv(data,'sample_annotation_EROSION.csv',quote=FALSE,row.names=FALSE)
