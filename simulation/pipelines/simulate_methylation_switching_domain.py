@@ -1,10 +1,9 @@
 #!/usr/bin/python
 
 #####################################################################################################
-#' simulate_negative_example.py
+#' simulate_methylation_switching_domain.py
 #' This script create a negative example of within-sample heterogeneity: a single cell type is 
-#' simulated containing a differentially methylated region, or no DMR for negative cases (for ROC
-#' computation.
+#' simulated containing a methylation switching domain.
 #####################################################################################################
 
 import os

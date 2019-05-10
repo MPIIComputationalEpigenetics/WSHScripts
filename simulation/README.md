@@ -6,7 +6,7 @@ This file should guide you how to use the scripts located in the directory to si
 
 	Simulates a randomly selected number of cell types (between 2 and 10) and introduces a methylation switch in each of the cell types therefore creating a truly heterogeneous region (THR). With probability 50%, the methylation state does not change, then we call this a negative example. Number of cell types and whether it is a negative control is stored in the file *numCT.txt*, the THR location is stored in *dmr_location.txt* in the cell types folders.
 
-* create_sample_purity.R
+* create_cellular_contamination.R
 
 	Simulates a contaminating cell type in a population of cells that appears to be pure. The contamination has a different methylation state in a randomly selected region (defined as the THR). This location is stored in *contamination/dmr/dmr_location.txt*; the simulated sample purity (between 50 and 100%) and whether it is a negative control in *purity.txt*.
 
@@ -18,9 +18,9 @@ This file should guide you how to use the scripts located in the directory to si
 
 	Simulates DNA methylation erosion by stochastically introducing methylated or non methylated CpGs (by a random parameter **alpha**) in a defined region. This region is then replicated **gamma** times to simulate stochasticity of selecting reads for sequencing. All those parameters, whether the region is a negative control or not, and the location of the THR is stored in the folder.
 
-* create_negative_example.R
+* create_methylation_switching_domain.R
 
-	Simulates a negative example, in which no within-sample heterogeneity is present. A single cell type is simulated containing a methylated and an unmethylated region (for positive example) or that is consistently methylated throughout the complete region.
+	Simulates a negative example, in which no within-sample heterogeneity is present. A single cell type is simulated containing methylation switching domain, which is either methylated or unmethylated region (for positive example) or that is consistently methylated throughout the complete region.
 
 * create_coverage.R
 
@@ -54,10 +54,10 @@ metadata:
 
 Since you selected one of the scenarios, you then need to modify the corresponding configuration file (.yaml) in *pipelines*. Here you need to add paths to certain files, for instance to bismark, samtools and methclone (https://genomebiology.biomedcentral.com/articles/10.1186/s13059-014-0472-5). Please install those tools, if you haven't done so yet. 
 
-If you employ your pipeline on a Sun Grid Engine (SGE), you are ready to go. First install looper (http://looper.readthedocs.io) and then just specify the environment variable `LOOPERENV=path_to_compute_config.yaml`. Add the path to looper (normally in `~/.local/bin`) to your PATH variable and then start the pipeline with:
+If you employ your pipeline on a Sun Grid Engine (SGE), you are ready to go. First install looper (http://looper.readthedocs.io) and then just specify the environment variable `LOOPERENV=path_to_compute_config.yaml`. Add the path to looper (typically in `~/.local/bin`) to your PATH variable and then start the pipeline with:
 
 ```bash
 looper run --compute sge simulation_project_config.yaml
 ```
 
-Leaving `--compute sge` out, you'll employ the pipelines sequentially on your machine. If you have another scientific compute cluster configuration, please read in the looper documentation (http://looper.readthedocs.io) on how to adjust *compute_config.yaml* to your setting.
+Without `--compute sge` you'll employ the pipelines sequentially on your machine. If you have another scientific compute cluster configuration, please read in the looper documentation (http://looper.readthedocs.io) on how to adjust *compute_config.yaml* to your setting.

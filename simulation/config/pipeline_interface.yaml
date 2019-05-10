@@ -58,7 +58,7 @@ simulate_CT_heterogeneity.py:
    cores: "4"
    mem: "4000"
    h_vmem: "10G"
-simulate_sample_purity.py:
+simulate_cellular_contamination.py:
  name: simulation
  looper_args: True
  arguments:
@@ -100,7 +100,7 @@ simulate_erosion.py:
    cores: "4"
    mem: "4000"
    h_vmem: "10G"
-simulate_negative_example.py:
+simulate_methylation_switching_domain.py:
  name: simulation
  looper_args: True
  arguments:

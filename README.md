@@ -1,6 +1,6 @@
 ## Introduction
 
-This repository contains all scripts relevant to reproduce the results in **Quantitative comparison of Intra-Sample Heterogeneity Scores for DNA Methylation Data**. These scores are qFDRP, FDRP, PDR, MHL, Epipolymorphism and Entropy. The repository contains the following folders:
+This repository contains all scripts relevant to reproduce the results in **Quantitative comparison of Within-Sample Heterogeneity Scores for DNA Methylation Data**. These scores are qFDRP, FDRP, PDR, MHL, Epipolymorphism and Entropy. The repository contains the following folders:
 
 ### misc
 
@@ -20,7 +20,7 @@ Contains the implementation of the scores.
 
 ### simulation
 
-Contains the pipelines used to compare the ISH scores on synthetic data.
+Contains the pipelines used to compare the WSH scores on synthetic data.
 
 ## License
 
