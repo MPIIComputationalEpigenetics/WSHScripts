@@ -18,6 +18,10 @@ This file should guide you how to use the scripts located in the directory to si
 
 	Simulates DNA methylation erosion by stochastically introducing methylated or non methylated CpGs (by a random parameter **alpha**) in a defined region. This region is then replicated **gamma** times to simulate stochasticity of selecting reads for sequencing. All those parameters, whether the region is a negative control or not, and the location of the THR is stored in the folder.
 
+* create_negative_example.R
+
+	Simulates a negative example, in which no within-sample heterogeneity is present. A single cell type is simulated containing a methylated and an unmethylated region (for positive example) or that is consistently methylated throughout the complete region.
+
 * create_coverage.R
 
 	Simluates dependecies of the ISH scores on different coverage data sets.

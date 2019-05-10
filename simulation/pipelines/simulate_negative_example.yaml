@@ -1,0 +1,53 @@
+tools:
+ sherman: /TL/deep/projects/work/mscherer/projects/heterogeneity/simulation/tools/Sherman_v0.1.7/Sherman
+ bismark: /TL/deep-share/archive00/software/packages/bismark/bismark_v0.13.0/bismark
+ bismark_extractor: /TL/deep-share/archive00/software/packages/bismark/bismark_v0.13.0/bismark_methylation_extractor
+ bismark_genome_preparation: /TL/deep-share/archive00/software/packages/bismark/bismark_v0.13.0/bismark_genome_preparation
+ samtools: /TL/deep-share/archive00/software/packages/samtools/v1.3/samtools-1.3/samtools
+ rscript: /TL/deep-share/archive00/software/packages/R/R-3.5.0/bin/Rscript
+ methclone: /TL/deep/projects/work/mscherer/projects/heterogeneity/src/methclone/cluster/bin/methclone
+ perl: /usr/bin/perl
+
+resources:
+ #' This should be a path to the reference genome hg38, more specifically to a folder that contains
+ #' each of the chromosomes as a .fa (FASTA) file
+ genome_folder: /TL/deep/projects/work/mscherer/projects/heterogeneity/simulation/data/reference/GRCh38/genome/
+ #'bismark_genome_preparation should be executed once before starting the pipeline. The 
+ #'resulting folder should then be inserted here
+ bisulfite_folder: /TL/deep/projects/work/mscherer/projects/heterogeneity/simulation/data/reference/GRCh38/genome/
+
+parameters:
+ 
+ bismark:
+  bowtie: bowtie2
+  bowtie_path: /TL/deep-share/archive00/software/packages/bowtie2/bowtie2-2.2.9/
+  samtools: /TL/deep-share/archive00/software/packages/samtools/v1.3/samtools-1.3/
+
+ sherman:
+  number: 25000
+  length: 50
+  CH: 77
+  error_rate: 1
+  quality: 40
+
+ #' full path for cluster run and ../ for local run
+ rscript:
+  fdrp_script: /TL/deep/projects/work/mscherer/projects/heterogeneity/src/FDRP/src/run_cluster_script.R
+  qfdrp_script: /TL/deep/projects/work/mscherer/projects/heterogeneity/src/FDRP/v2/src/run_cluster_script.R
+  create_rnb: /TL/deep/projects/work/mscherer/projects/heterogeneity/simulation/src/create_rnbSet.R
+  pdr_script: /TL/deep/projects/work/mscherer/projects/heterogeneity/src/PDR/main.R
+  cores: 1
+  conversion_epipoly: /TL/deep/projects/work/mscherer/projects/heterogeneity/src/methclone/convert_to_epipoly.R
+  conversion_entropy: /TL/deep/projects/work/mscherer/projects/heterogeneity/src/methclone/convert_to_entropy.R
+
+ mhl:
+  to_hapinfo: /TL/deep/projects/work/mscherer/projects/heterogeneity/src/MHL/mergedBam2hapInfo_RRBS_v1.0.pl
+  hapinfo_to_mhl: /TL/deep/projects/work/mscherer/projects/heterogeneity/src/MHL/hapinfo2mhl.pl
+
+ methclone:
+  meth_diff: 0
+  distance_cutoff: 50
+  coverage: 10
+
+ misc:
+  ld: /TL/deep/opt/share/archive00/software/packages/curl/curl-7.47.1/instCurl/lib:/TL/deep/opt/share/archive00/software/packages/curl/curl-7.47.1/instCurl/lib

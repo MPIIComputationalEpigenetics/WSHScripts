@@ -5,3 +5,4 @@ CT_HETERO: simulate_CT_heterogeneity.py
 SAMPLE_PURITY: simulate_sample_purity.py
 ASM: simulate_ASM.py
 EROSION: simulate_erosion.py
+NEG_EXAMPLE: simulate_negative_example.py
