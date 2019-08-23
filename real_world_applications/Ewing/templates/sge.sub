@@ -2,6 +2,7 @@
 #$ -l slots_free={CORES}
 #$ -l mem_free={MEM}
 #$ -l h_vmem={H_VMEM}
+#$ -V
 #$ -e {LOGFILE}
 #$ -o {LOGFILE}
 #$ -N {JOBNAME}

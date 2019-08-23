@@ -9,7 +9,7 @@
 #' plot.path: folder to store the results
 #' 
 #' A single plot is the result.
-folder.path <- "path_to_results_pipeline"
+folder.path <- "path_to_results_pipeline/"
 plot.path <- getwd()
 mround <- function(x,base){
         base*round(x/base)
@@ -38,18 +38,25 @@ for(file in folders){
 }
 colnames(data) <- c('FDRP','qFDRP','PDR','MHL','Epipolymorphism','Entropy','Coverage')
 data$Coverage <- mround(data$Coverage,5)
-data <- aggregate(data,by=list(data$Coverage),mean,na.rm=TRUE)
-data <- data[,-1]
-melted <- melt(data,id='Coverage')
-colnames(melted)[2:3] <- c('Measure','Value')
+data.mean <- aggregate(data,by=list(data$Coverage),mean,na.rm=T)
+data.mean <- data.mean[,-1]
+data.sd <- aggregate(data,by=list(data$Coverage),function(x){sd(x,na.rm=T)/sqrt(length(x))})
+data.sd <- data.sd[,-1]
+melted <- melt(data.mean,id='Coverage')
+melted <- cbind(melt(data.mean,id='Coverage'),melt(data.sd,id='Coverage')$value)
+colnames(melted)[2:4] <- c('Measure','Mean','SD')
 colors <- rnb.getOption('colors.category')
 temp <- colors[2]
 colors[2] <- "#76bf23ff"
 colors[1] <- "#00806fff"
 colors[5] <- temp
-plot <- ggplot(melted,aes(x=Coverage,y=Value,color=Measure,shape=Measure))+geom_point(size=3)+geom_line(size=1.2)+
+melted <- na.omit(melted)
+melted$Measure <- factor(melted$Measure,c("FDRP","qFDRP","PDR","MHL","Epipolymorphism","Entropy"))
+plot <- ggplot(melted,aes(x=Coverage,y=Mean,color=Measure,ymin=Mean-SD,ymax=Mean+SD))+geom_point(size=1)+geom_errorbar(width=0.5)+
+  geom_line(size=1.2,aes(linetype=Measure))+
   theme(panel.background = element_rect(fill='white',color='black'),text=element_text(size=30,face='bold'),
-        panel.grid.major = element_line(color='grey80'),panel.grid.minor = element_line(color='grey95'),
+        panel.grid=element_blank(),
         legend.key = element_rect(fill='white'),legend.position = 'top',legend.text = element_text(size=20))+
   scale_color_manual(values=colors)
 ggsave(paste0(plot.path,"coverage_dependence.pdf"),plot,device="pdf",height=11,width=8.5,units="in")
+

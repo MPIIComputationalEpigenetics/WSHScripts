@@ -9,7 +9,7 @@
 #' plot.path: folder to store the results
 #' 
 #' A single plot is the result.
-folder.path <- "path_to_results_pipeline"
+folder.path <-  "path_to_results_pipeline/"
 plot.path <- getwd()
 library(reshape2)
 library(ggplot2)
@@ -33,22 +33,21 @@ for(file in folders){
   data <- rbind(data,c(error.level,fdrp,qfdrp,pdr,mhl,epipoly,entropy))
 }
 colnames(data) <- c('Error_Level','FDRP','qFDRP','PDR','MHL','Epipolymorphism','Entropy')
-agg <- aggregate(data,by=list(data$Error_Level),function(x){c(mean=mean(x,na.rm=TRUE),sd=sd(x,na.rm = TRUE))})
-agg <- agg[,-c(2)]
-melted <- c()
-for(i in 2:7){
-  frame <- agg[,i]
-  add <- data.frame(Measure=colnames(data)[i],Error_Level=agg[,1],Mean=frame[,1],SD=frame[,2])
-  melted <- rbind(melted,add)
-}
+data.mean <- aggregate(data,by=list(data$Error_Level),mean,na.rm=T)
+data.mean <- data.mean[,-1]
+data.sd <- aggregate(data,by=list(data$Error_Level),function(x){sd(x,na.rm=T)/sqrt(length(x))})
+data.sd <- data.sd[,-1]
+melted <- melt(data.mean,id='Error_Level')
+melted <- cbind(melt(data.mean,id='Error_Level'),melt(data.sd,id='Error_Level')$value)
+colnames(melted)[2:4] <- c('Measure','Mean','SD')
 colors <- rnb.getOption('colors.category')
 temp <- colors[2]
 colors[2] <- "#76bf23ff"
 colors[1] <- "#00806fff"
 colors[5] <- temp
-plot <- ggplot(melted,aes(x=Error_Level,y=Mean,ymin=Mean-2*SD,ymax=Mean+2*SD,color=Measure,shape=Measure))+geom_point(size=3)+ 
-  geom_line(size=1.2)+theme(panel.background = element_rect(fill='white',color='black'),text=element_text(size=30,face='bold'),
-                            panel.grid.major = element_line(color='grey80'),panel.grid.minor = element_line(color='grey95'),
-                            legend.key = element_rect(fill='white'),legend.position = 'top',legend.text = element_text(size=20))+
-  scale_color_manual(values=colors)+xlab('Error Level [%]')+ylim(0,0.75)
+plot <- ggplot(melted,aes(x=Error_Level,y=Mean,ymin=Mean-SD,ymax=Mean+SD,color=Measure))+geom_point(size=1)+geom_errorbar(width=0.5)+
+  geom_line(size=1.2,aes(linetype=Measure))+theme(panel.background = element_rect(fill='white',color='black'),text=element_text(size=20,face='bold'),
+                            panel.grid.major = element_blank(),
+                            legend.key = element_rect(fill='white'),legend.position = 'top',legend.text = element_text(size=15))+
+  scale_color_manual(values=colors)+xlab('Error Level [%]')+ylim(0.05,0.6)
 ggsave(paste0(plot.path,"error_dependence.pdf"),plot,device="pdf",height=11,width=8.5,units="in")

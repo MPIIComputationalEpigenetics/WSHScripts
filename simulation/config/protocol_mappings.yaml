@@ -2,7 +2,7 @@ Coverage: simulate_coverage.py
 Read_Length: simulate_read_length.py
 Errors: simulate_sequencing_errors.py
 CT_HETERO: simulate_CT_heterogeneity.py
-SAMPLE_PURITY: simulate_sample_purity.py
+SAMPLE_PURITY: simulate_cellular_contamination.py
 ASM: simulate_ASM.py
 EROSION: simulate_erosion.py
-NEG_EXAMPLE: simulate_negative_example.py
+NEG_EXAMPLE: simulate_methylation_switching_domain.py

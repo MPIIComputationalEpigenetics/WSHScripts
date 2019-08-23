@@ -1,6 +1,8 @@
 #!/bin/bash
-#$ -l slots_free=12
-#$ -l h_vmem=60G
+#$ -l slots_free={CORES}
+#$ -l mem_free={MEM}
+#$ -l h_vmem={H_VMEM}
+#$ -V
 #$ -e {LOGFILE}
 #$ -o {LOGFILE}
 #$ -N {JOBNAME}

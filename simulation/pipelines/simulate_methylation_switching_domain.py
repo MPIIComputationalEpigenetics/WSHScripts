@@ -29,6 +29,8 @@ manager = pypiper.PipelineManager(name="SIMULATION",
 if not os.path.exists(args.output_parent + "/" + args.sample_id):
 	os.makedirs(args.output_parent + "/" + args.sample_id)
 
+pipe_folder = os.path.dirname(sys.argv[0])  + "/"
+
 # Select the region we want to analyze
 files = os.listdir(manager.config.resources.genome_folder)
 args.chr = str(args.chr)
@@ -142,14 +144,14 @@ simulated = args.output_parent + "/" + args.sample_id + "/"  + "/simulated/"
 cmd = manager.config.tools.sherman + " --length " + str(manager.config.parameters.sherman.length) + " --number_of_seqs " + str(int(round(num_reads*frac_dmr))) + " --CG_conversion " + str(dmr_meth) + " --CH_conversion " + str(manager.config.parameters.sherman.CH) + " --genome_folder " + args.output_parent + "/" + args.sample_id + "/dmr/ --outfolder " + simulated + " --outname dmr " + " --error_rate " + str(manager.config.parameters.sherman.error_rate) + " --quality " + str(manager.config.parameters.sherman.quality) + " --rrbs"
 manager.run(cmd,lock_name=args.sample_id+'locker')
 
-# Merge the fastq files
-cmd = "cat " + simulated + "first.fastq > " + simulated + "/first.fq; cat "  + simulated + "second.fastq > " + simulated + "/second.fq; cat "  + simulated + "dmr.fastq > " + simulated + "/dmr.fq"#; rm -Rf " + simulated + "*.fastq"
-manager.run(cmd,lock_name=args.sample_id+'locker')
-
 out_file = open(args.output_parent + "/" + args.sample_id +'/dmr_location.txt','wb')
 out_string = str(min_dmr*50) + "\n" + str(max_dmr*50)
 out_file.write(out_string)
 out_file.close()
+
+# Merge the fastq files
+cmd = "cat " + simulated + "first.fastq > " + simulated + "merged.fq; cat "  + simulated + "dmr.fastq >> " + simulated + "merged.fq; cat "  + simulated + "second.fastq >> " + simulated + "merged.fq; sleep 10"#; rm -Rf " + simulated + "*.fastq"
+manager.run(cmd,lock_name=args.sample_id+'locker')
 
 # Map the simulated fastq file to the reference with bimark
 mapped = args.output_parent + "/" + args.sample_id + "/mapped/"
@@ -169,7 +171,7 @@ manager.run(cmd,covs)
 # Create and store rnbSet
 os.environ['R_LIBS'] = manager.config.parameters.rscript.rlib
 os.environ['LD_LIBRARY_PATH'] = manager.config.parameters.misc.ld
-cmd = 'rm ' + covs + '*.txt; rm ' + covs + '*.png; rm ' + covs + '*.bedGraph; '+ 'echo "sample_id,filename\nTest,all_merged.bismark.cov" > ' + args.output_parent + "/" + args.sample_id + '/sample_annotation.csv; ' +  manager.config.tools.rscript + ' ' + manager.config.parameters.rscript.create_rnb + ' ' + args.output_parent + "/" + args.sample_id + "; rm " + args.output_parent + "/" + args.sample_id + "/sample_annotation.csv"
+cmd = 'rm ' + covs + '*.txt; rm ' + covs + '*.png; rm ' + covs + '*.bedGraph; '+ 'echo "sample_id,filename\nTest,all_merged.bismark.cov" > ' + args.output_parent + "/" + args.sample_id + '/sample_annotation.csv; ' +  manager.config.tools.rscript + ' ' + pipe_folder + manager.config.parameters.rscript.create_rnb + ' ' + args.output_parent + "/" + args.sample_id + "; rm " + args.output_parent + "/" + args.sample_id + "/sample_annotation.csv"
 manager.run(cmd,lock_name=args.sample_id+'locker')
 
 # Write sam as bam file
@@ -188,17 +190,17 @@ manager.run(cmd,lock_name=args.sample_id+'locker')
 
 # Calculate FDRP for the output bam file
 fdrp = args.output_parent + "/" + args.sample_id + '/FDRP/'
-cmd = manager.config.tools.rscript + ' ' + manager.config.parameters.rscript.fdrp_script + ' FDRP ' + fdrp + " " + sorted_bam + ' ' + args.output_parent + "/" + args.sample_id + '/rnbSet.zip ' + str(manager.config.parameters.rscript.cores)
+cmd = manager.config.tools.rscript + ' ' + pipe_folder + manager.config.parameters.rscript.fdrp_script + ' FDRP ' + fdrp + " " + sorted_bam + ' ' + args.output_parent + "/" + args.sample_id + '/rnbSet.zip ' + str(manager.config.parameters.rscript.cores)
 manager.run(cmd,lock_name=args.sample_id+'locker')
 
 # Calculate qFDRP for the output bam file
 qfdrp = args.output_parent + "/" + args.sample_id + '/qFDRP/'
-cmd = manager.config.tools.rscript + ' ' + manager.config.parameters.rscript.qfdrp_script + ' qFDRP ' + qfdrp + " " + sorted_bam + ' '+ args.output_parent + "/" + args.sample_id + '/rnbSet.zip ' + str(manager.config.parameters.rscript.cores)
+cmd = manager.config.tools.rscript + ' '+ pipe_folder  + manager.config.parameters.rscript.qfdrp_script + ' qFDRP ' + qfdrp + " " + sorted_bam + ' '+ args.output_parent + "/" + args.sample_id + '/rnbSet.zip ' + str(manager.config.parameters.rscript.cores)
 manager.run(cmd,lock_name=args.sample_id+'locker')
 
 # Calculate PDR for the output bam file
 pdr = args.output_parent + "/" + args.sample_id + '/PDR/'
-cmd = manager.config.tools.rscript + ' ' + manager.config.parameters.rscript.pdr_script + ' PDR ' + pdr + " " + sorted_bam + ' ' + args.output_parent + "/" + args.sample_id + '/rnbSet.zip ' + str(manager.config.parameters.rscript.cores)
+cmd = manager.config.tools.rscript + ' ' + pipe_folder + manager.config.parameters.rscript.pdr_script + ' PDR ' + pdr + " " + sorted_bam + ' ' + args.output_parent + "/" + args.sample_id + '/rnbSet.zip ' + str(manager.config.parameters.rscript.cores)
 manager.run(cmd,lock_name=args.sample_id+'locker')
 
 #' Create MHL region of interest
@@ -206,12 +208,12 @@ roi = args.output_parent + "/" + args.sample_id
 roi += "/roi.bed"
 hapinfo_output = args.output_parent + "/" + args.sample_id + '/hapinfo.txt'
 os.environ['PATH'] = manager.config.parameters.bismark.samtools + ':' + os.environ['PATH']
-cmd = " ".join([manager.config.tools.perl, manager.config.parameters.mhl.to_hapinfo, roi, sorted_bam, "bismark", roi, '>', hapinfo_output])
+cmd = " ".join([manager.config.tools.perl, pipe_folder + manager.config.parameters.mhl.to_hapinfo, roi, sorted_bam, "bismark", roi, '>', hapinfo_output])
 manager.run(cmd,hapinfo_output)
 
 #' Calculate MHL from haplotype information
 mhl_output = args.output_parent + "/" + args.sample_id + '/mhl.txt'
-cmd = 'echo ' + hapinfo_output + " > " + args.output_parent + "/" + args.sample_id + "/info_list.txt; " + " ".join([manager.config.tools.perl, manager.config.parameters.mhl.hapinfo_to_mhl, args.output_parent + "/" + args.sample_id + "/info_list.txt", '>', mhl_output])
+cmd = 'echo ' + hapinfo_output + " > " + args.output_parent + "/" + args.sample_id + "/info_list.txt; " + " ".join([manager.config.tools.perl, pipe_folder + manager.config.parameters.mhl.hapinfo_to_mhl, args.output_parent + "/" + args.sample_id + "/info_list.txt", '>', mhl_output])
 manager.run(cmd,mhl_output)
 
 # Run methclone software
@@ -221,12 +223,12 @@ manager.run(cmd,methclone_output)
 
 #' Calculate epipolymorphism from methclone's output and remove this
 epipoly_output = args.output_parent + "/" + args.sample_id + 'epipoly.csv'
-cmd = " ".join([manager.config.tools.rscript, manager.config.parameters.rscript.conversion_epipoly, methclone_output, 'epipoly', args.output_parent + "/" + args.sample_id]) + ' ; rm ' + methclone_output
+cmd = " ".join([manager.config.tools.rscript, pipe_folder + manager.config.parameters.rscript.conversion_epipoly, methclone_output, 'epipoly', args.output_parent + "/" + args.sample_id]) + ' ; rm ' + methclone_output
 manager.run(cmd,epipoly_output)
 
 #' Calculate methylation entropy from methclone's output and remove this
 entropy_output = args.output_parent + "/" + args.sample_id + 'entropy.csv'
-cmd = " ".join([manager.config.tools.rscript, manager.config.parameters.rscript.conversion_entropy, methclone_output, 'entropy', args.output_parent + "/" + args.sample_id]) + ' ; rm ' + methclone_output
+cmd = " ".join([manager.config.tools.rscript, pipe_folder + manager.config.parameters.rscript.conversion_entropy, methclone_output, 'entropy', args.output_parent + "/" + args.sample_id]) + ' ; rm ' + methclone_output
 manager.run(cmd,entropy_output)
 
 #' cleanup

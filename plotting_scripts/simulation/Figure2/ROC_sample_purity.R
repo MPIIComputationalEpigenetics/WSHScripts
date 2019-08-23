@@ -14,9 +14,9 @@ library(reshape2)
 library(ggplot2)
 library(RnBeads)
 library(pROC)
-folder.path <- "path_to_result_pipeline"
-plot.path <- getwd()
-roc.path <- getwd()
+folder.path <- "/TL/deep/projects/work/mscherer/projects/heterogeneity/simulation/results/correct_simulation/sample_purity/results_pipeline/"
+plot.path <- "/TL/deep/projects/work/mscherer/projects/heterogeneity/simulation/results/analysis/correct_simulation/sample_purity/pdfs"
+roc.path <- "/TL/deep/projects/work/mscherer/projects/heterogeneity/simulation/results/analysis/correct_simulation/sample_purity/roc_new"
 plot.type <- "pdf"
 
 folders <- list.files(folder.path,full.names = TRUE)
@@ -134,7 +134,7 @@ for(file in folders){
   colors[2] <- colors[5]
   colors[5] <- temp
   colors <- c(colors,rep("black",ct.count))
-  plot <- ggplot(melted,aes(x=Position,y=Value,color=Measure,fill=Measure))+facet_grid(Measure~.)+geom_point(data=melted[grepl('Methylation',melted$Measure),],color='black',size=1)+geom_point(data=melted[!grepl('Methylation',melted$Measure),],size=0.1)+geom_bar(data=melted[!grepl('Methylation',melted$Measure),],stat='identity')+theme(panel.background = element_rect(fill='white',color='black'),text=element_text(size=20,face='bold'),panel.grid.major = element_line(color='grey80'),panel.grid.minor = element_line(color='grey95'),legend.key = element_rect(fill='white'),legend.position = 'none',strip.text = element_text(size=12))+scale_color_manual(values=colors,guide=FALSE)+scale_fill_manual(values=colors)+
+  plot <- ggplot(melted,aes(x=Position,y=Value,color=Measure,fill=Measure))+facet_grid(Measure~.)+geom_point(data=melted[grepl('Methylation',melted$Measure),],color='black',size=1)+geom_point(data=melted[!grepl('Methylation',melted$Measure),],size=0.1)+geom_bar(data=melted[!grepl('Methylation',melted$Measure),],stat='identity')+theme(panel.background = element_rect(fill='white',color='black'),text=element_text(size=20,face='bold'),panel.grid=element_blank(),legend.key = element_rect(fill='white'),legend.position = 'none',strip.text = element_text(size=12))+scale_color_manual(values=colors,guide=FALSE)+scale_fill_manual(values=colors)+
     scale_y_continuous(breaks=c(0,0.5,1))+ggtitle(chr)
 	dmr.info <- readLines(file.path(file,"contamination","dmr","dmr_location.txt"))
 	is.negative <- readLines(file.path(file,"purity.txt"))[1] == "Negative control"
@@ -167,10 +167,17 @@ for(file in folders){
 }
 roc.data <- as.data.frame(roc.data)
 colnames(roc.data) <- c("IsNegative","Methylation",'FDRP','qFDRP','PDR','MHL','Epipolymorphism','Entropy')
+line.types <- c("solid","solid", "22", "42", "44", "13", "1343")
+names(line.types) <- c("Methylation",'FDRP','qFDRP','PDR','MHL','Epipolymorphism','Entropy')
 for(score in c("Methylation",'FDRP','qFDRP','PDR','MHL','Epipolymorphism','Entropy')){
 	roc.obj <- roc(response=!roc.data$IsNegative,predictor=1-roc.data[,score])
 	pdf(paste0(roc.path,"/",score,".pdf"),height=11,width=8.5)
-	plot(roc.obj,print.auc=T)
+	plot(roc.obj,print.auc=T,lty=line.types[score])
+	dev.off()
+	nas.score <- is.na(roc.data[,score])
+	pr.obj <- pr.curve(scores.class0=1-roc.data[!nas.score,score],weights.class0=!roc.data$IsNegative[!nas.score],curve=T)
+	pdf(paste0(roc.path,"/",score,"_PR.pdf"),height=11,width=8.5)
+	plot(pr.obj,print.auc=T,lty=line.types[score],legend=F,color="black")
 	dev.off()
 }
 write.csv(roc.data,file.path(roc.path,"roc_data.csv"))

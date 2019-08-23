@@ -3,12 +3,12 @@ anno <- rnb.get.annotation('CpG','hg38')
 lengths <- unlist(lapply(anno,function(x){max(end(x))}))
 starts <- unlist(lapply(anno,function(x){min(start(x))}))
 names(starts) <- names(lengths)
-data <- matrix(nrow=800,ncol=4)
+data <- matrix(nrow=1000,ncol=4)
 lengths <- lengths[-c(22,23,24)]
 complete <- sum(as.numeric(lengths))
 probs <- lengths/complete
 i <- 0
-while(i<800){
+while(i<1000){
   print(i)
   chrom <- sample(names(lengths),1,prob=probs)
   start <- sample((starts[chrom]+100000):lengths[chrom]-100000,1)
@@ -27,6 +27,6 @@ while(i<800){
   i <- i+1
 	data[i,] <- line
 }
-data <- data.frame(data,rep('NEG_EXAMPLE',800))
+data <- data.frame(data,rep('NEG_EXAMPLE',1000))
 colnames(data) <- c('sample_name','chr','start','end','library')
 write.csv(data,'sample_annotation.csv',quote=FALSE,row.names=FALSE)

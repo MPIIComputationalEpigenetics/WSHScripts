@@ -1,5 +1,5 @@
 tools:
- samtools: path_to_samtools
+ samtools: path_to_samtools_folder
  rscript: path_to_rscript
  perl: path_to_perl
  methclone: path_to_methclone

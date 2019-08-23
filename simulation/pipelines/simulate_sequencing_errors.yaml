@@ -1,30 +1,36 @@
 tools:
+ #Available at https://www.bioinformatics.babraham.ac.uk/projects/sherman/
  sherman: path_to_sherman
- bismark: path_to_bismark
+ #Available at http://www.bioinformatics.babraham.ac.uk/projects/bismark/
+ bismark: path_to_bismark 
  bismark_extractor: path_to_bismark_methylation_extractor
+ #Available at http://www.htslib.org/
  samtools: path_to_samtools
+ #Available at https://www.r-project.org/
  rscript: path_to_Rscript
+ #Available at https://code.google.com/archive/p/methclone/
  methclone: path_to_methclone
  perl: /usr/bin/perl
 
 resources:
  #' This should be a path to the reference genome hg38, more specifically to a folder that contains
  #' each of the chromosomes as a .fa (FASTA) file
- genome_folder: path_to_genome
+ genome_folder: path_to_genome_folder
  #'bismark_genome_preparation should be executed once before starting the pipeline. The 
  #'resulting folder should then be inserted here
- bisulfite_folder: path_to_genome
+ bisulfite_folder: path_to_bisulfite_folder
 
 parameters:
  
  bismark:
   bowtie: bowtie2
-  bowtie_path: path_to_bowtie2_folder
+  #Available at http://bowtie-bio.sourceforge.net/index.shtml
+  bowtie_path: path_to_bowtie
   samtools: path_to_samtools_folder
 
  sherman:
-  length: 50
-  number: 25000
+  length: 100
+  number: 12500
   CH: 77
   quality: 40
 

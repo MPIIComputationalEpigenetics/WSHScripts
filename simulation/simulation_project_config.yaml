@@ -1,4 +1,4 @@
 metadata:
- sample_annotation: annotation_generator/sample_annotation.csv
+ sample_annotation: sample_annotation.csv
  output_dir: out_dir
  pipelines_dir: .

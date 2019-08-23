@@ -24,10 +24,10 @@ while(i<10000){
   end <- start+50000
   #j <- sample(20000:50000,1)
   id <- paste(chrom,start,sep='_')
-  for(j in seq(5000,50000,by=5000)){
+  for(j in seq(2500,25000,by=2500)){
     rid <- paste0(id,"_",j)
     line <- c(ID=rid,Chr=chrom,Start=start,End=end,Reads=j)
-    data[i+(j/5000),] <- line
+    data[i+(j/2500),] <- line
   }
   i <- i+10
 }
