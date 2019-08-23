@@ -7,6 +7,9 @@
 ## sufficently large coverage
 ########################################################################################################################
 
+all.folders <- c(list.files("path_to_CT_hetero_results_pipeline",full.names=T),list.files("path_to_sample_purity_results_pipeline"
+,full.names=T),list.files("path_to_ASM_results_pipeline",full.names=T),list.files("path_to_erosion_results_pipeline",full.names=T),list.files("path_to_MSD_results_pipeline",full.names=T))
+
 #' loading the required packages
 suppressPackageStartupMessages(library(RnBeads))
 suppressPackageStartupMessages(library(GenomicAlignments))
@@ -424,8 +427,6 @@ calculate.qfdrps<- function(bam_file,anno,path,output_name,cores=1,window.size){
 	write.csv(qfdrps,paste0(path,output_name,".csv"),row.names=FALSE)
 }
 
-all.folders <- c(list.files("/TL/deep/projects/work/mscherer/projects/heterogeneity/simulation/results/correct_simulation/cell_type_heterogeneity_v2/results_pipeline/",full.names=T),list.files("/TL/deep/projects/work/mscherer/projects/heterogeneity/simulation/results/correct_simulation/sample_purity/results_pipeline/"
-,full.names=T),list.files("/TL/deep/projects/work/mscherer/projects/heterogeneity/simulation/results/correct_simulation/ASM/results_pipeline/",full.names=T),list.files("/TL/deep/projects/work/mscherer/projects/heterogeneity/simulation/results/correct_simulation/erosion/results_pipeline/",full.names=T),list.files("/TL/deep/projects/work/mscherer/projects/heterogeneity/simulation/results/correct_simulation/negative_example/results_pipeline/",full.names=T))
 all.ops <- list()
 for(min.op in seq(10,50,by=5)){
 	sel.files <- all.folders[sample(1:length(all.folders),1000)]

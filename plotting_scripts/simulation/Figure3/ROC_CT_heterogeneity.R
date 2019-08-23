@@ -1,7 +1,7 @@
 #######################################################################################################
-#' ROC_erosion.R
+#' ROC_CT_heterogeneity.R
 #-----------------------------------------------------------------------------------------------------
-#' This script produces plots similar to Figure 2D: genome browser-like views of the WSH scores,
+#' This script produces plots similar to Figure 2A: genome browser-like views of the WSH scores,
 #' the methylation levels in individual cell types and aggregated over all cell types. Furthermore,
 #' ROC curves are produced representing the classification performance of a particular score or the
 #' average methylation level. Three paths need to be given to the script.
@@ -15,9 +15,9 @@ library(ggplot2)
 library(RnBeads)
 library(pROC)
 library(PRROC)
-folder.path <- "/TL/deep/projects/work/mscherer/projects/heterogeneity/simulation/results/correct_simulation/erosion/results_pipeline/"
-plot.path <- "/TL/deep/projects/work/mscherer/projects/heterogeneity/simulation/results/analysis/correct_simulation/erosion/pdfs/"
-roc.path <- "/TL/deep/projects/work/mscherer/projects/heterogeneity/simulation/results/analysis/correct_simulation/erosion/roc/"
+folder.path <- "path_to_CT_hetero_results_pipeline"
+plot.path <- "path_for_pdfs"
+roc.path <- "path_for_rocs"
 plot.type <- "pdf"
 
 folders <- list.files(folder.path,full.names = TRUE)
@@ -120,7 +120,7 @@ for(file in folders){
 	 add.data[queryHits(op)] <- methData[subjectHits(op)]
 	 add.data <- add.data/100
 	 data <- data.frame(add.data,data)
-     if(!grepl("merged",ct)){
+     if(!grepl("all_merged",ct)){
      	colnames(data)[1] <- paste("Methylation_CT_",ct.count)
 	 	ct.count <- ct.count+1
 	 }else{
@@ -137,16 +137,17 @@ for(file in folders){
   colors <- c(colors,rep("black",ct.count))
   plot <- ggplot(melted,aes(x=Position,y=Value,color=Measure,fill=Measure))+facet_grid(Measure~.)+geom_point(data=melted[grepl('Methylation',melted$Measure),],color='black',size=1)+geom_point(data=melted[!grepl('Methylation',melted$Measure),],size=0.1)+geom_bar(data=melted[!grepl('Methylation',melted$Measure),],stat='identity')+theme(panel.background = element_rect(fill='white',color='black'),text=element_text(size=20,face='bold'),panel.grid=element_blank(),legend.key = element_rect(fill='white'),legend.position = 'none',strip.text = element_text(size=12))+scale_color_manual(values=colors,guide=FALSE)+scale_fill_manual(values=colors)+
     scale_y_continuous(breaks=c(0,0.5,1))+ggtitle(chr)
-	dmr.info <- readLines(file.path(file,"erosion_score.txt"))
-	is.negative <- dmr.info[1] == "Negative control"
+	#' If we decide to go with the second version, this information is to be found in the numCT.txt file
+	dmr.info <- readLines(file.path(file,"dmr_location.txt"))
+	is.negative <- readLines(file.path(file,"numCT.txt"))[1] == "Negative control"
 	if(is.negative){
 		plot.name <- paste0(plot.path,paste(chr,min,max,"negative",sep="_"),".",plot.type)
 	}else{
 		plot.name <- paste0(plot.path,paste(chr,min,max,sep="_"),".",plot.type)
 	}
  	ggsave(plot.name,plot,device=plot.type,height=11,width=8.5,units="in")
-	dmr.start <- as.numeric(dmr.info[4])
-	dmr.end <- as.numeric(dmr.info[5])
+	dmr.start <- as.numeric(dmr.info[1])
+	dmr.end <- as.numeric(dmr.info[2])
   	dmr.start <- min(start(anno))+dmr.start
 	dmr.end <- min(start(anno))+dmr.end
 	in.dmr <- start(anno) >= dmr.start  & start(anno) <= dmr.end
@@ -171,6 +172,19 @@ colnames(roc.data) <- c("IsNegative","Methylation",'FDRP','qFDRP','PDR','MHL','E
 line.types <- c("solid","solid", "22", "42", "44", "13", "1343")
 names(line.types) <- c("Methylation",'FDRP','qFDRP','PDR','MHL','Epipolymorphism','Entropy')
 for(score in c("Methylation",'FDRP','qFDRP','PDR','MHL','Epipolymorphism','Entropy')){
+#	t.fr <- c()
+#	for(t in seq(0,1,by=0.001)){
+#		fps <- sum(roc.data[,score]<t & roc.data$IsNegative)
+#		fns <- sum(roc.data[,score]>t & !(roc.data$IsNegative))
+#		tps <- sum(roc.data[,score]<t & !(roc.data$IsNegative))
+#		tns <- sum(roc.data[,score]>t & roc.data$IsNegative)
+#		tpr <- tps/(tps+fns)
+#		fpr <- fps/(fps+tns)
+#		t.fr <- rbind(t.fr,c(tpr,fpr))
+#	}
+#	colnames(t.fr) <- c("TPR","FPR")
+#	t.fr <- as.data.frame(t.fr)
+#	plot <- ggplot(t.fr,aes(x=FPR,y=TPR))+geom_line()+geom_abline(intercept=0,slope=1)+theme_bw()
 	roc.obj <- roc(response=!roc.data$IsNegative,predictor=1-roc.data[,score])
 	pdf(paste0(roc.path,"/",score,".pdf"),height=11,width=8.5)
 	plot(roc.obj,print.auc=T,lty=line.types[score])

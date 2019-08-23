@@ -1,7 +1,7 @@
 #######################################################################################################
-#' ROC_sample_purity.R
+#' ROC_ASM.R
 #-----------------------------------------------------------------------------------------------------
-#' This script produces plots similar to Figure 2B: genome browser-like views of the WSH scores,
+#' This script produces plots similar to Figure 2C: genome browser-like views of the WSH scores,
 #' the methylation levels in individual cell types and aggregated over all cell types. Furthermore,
 #' ROC curves are produced representing the classification performance of a particular score or the
 #' average methylation level. Three paths need to be given to the script.
@@ -14,9 +14,10 @@ library(reshape2)
 library(ggplot2)
 library(RnBeads)
 library(pROC)
-folder.path <- "/TL/deep/projects/work/mscherer/projects/heterogeneity/simulation/results/correct_simulation/sample_purity/results_pipeline/"
-plot.path <- "/TL/deep/projects/work/mscherer/projects/heterogeneity/simulation/results/analysis/correct_simulation/sample_purity/pdfs"
-roc.path <- "/TL/deep/projects/work/mscherer/projects/heterogeneity/simulation/results/analysis/correct_simulation/sample_purity/roc_new"
+library(PRROC)
+folder.path <- "path_to_ASM_results_pipeline"
+plot.path <- "path_for_pdfs"
+roc.path <- "path_for_rocs"
 plot.type <- "pdf"
 
 folders <- list.files(folder.path,full.names = TRUE)
@@ -54,7 +55,7 @@ for(file in folders){
   	anno_mhl <- as.data.frame(anno_mhl)
   	anno_mhl <- t(anno_mhl)
   	anno_mhl <- GRanges(Rle(anno_mhl[,1]),IRanges(as.numeric(anno_mhl[,2]),as.numeric(anno_mhl[,3])))
-	op <- findOverlaps(anno,anno_mhl)
+  	op <- findOverlaps(anno,anno_mhl)
 	repla <- rep(NA,dim(data)[1])
 	if(length(op)!=0){
 	  	mhl <- as.numeric(mhl[,2])
@@ -136,16 +137,16 @@ for(file in folders){
   colors <- c(colors,rep("black",ct.count))
   plot <- ggplot(melted,aes(x=Position,y=Value,color=Measure,fill=Measure))+facet_grid(Measure~.)+geom_point(data=melted[grepl('Methylation',melted$Measure),],color='black',size=1)+geom_point(data=melted[!grepl('Methylation',melted$Measure),],size=0.1)+geom_bar(data=melted[!grepl('Methylation',melted$Measure),],stat='identity')+theme(panel.background = element_rect(fill='white',color='black'),text=element_text(size=20,face='bold'),panel.grid=element_blank(),legend.key = element_rect(fill='white'),legend.position = 'none',strip.text = element_text(size=12))+scale_color_manual(values=colors,guide=FALSE)+scale_fill_manual(values=colors)+
     scale_y_continuous(breaks=c(0,0.5,1))+ggtitle(chr)
-	dmr.info <- readLines(file.path(file,"contamination","dmr","dmr_location.txt"))
-	is.negative <- readLines(file.path(file,"purity.txt"))[1] == "Negative control"
+	dmr.info <- readLines(file.path(file,"asm","asm_location.txt"))
+	is.negative <- dmr.info[1] == "Negative control"
 	if(is.negative){
 		plot.name <- paste0(plot.path,paste(chr,min,max,"negative",sep="_"),".",plot.type)
 	}else{
 		plot.name <- paste0(plot.path,paste(chr,min,max,sep="_"),".",plot.type)
 	}
- 	ggsave(plot.name,plot,device=plot.type,height=11,width=8.5,units="in")
-	dmr.start <- as.numeric(dmr.info[1])
-	dmr.end <- as.numeric(dmr.info[2])
+ 	#ggsave(plot.name,plot,device=plot.type,height=11,width=8.5,units="in")
+	dmr.start <- as.numeric(dmr.info[ifelse(is.negative,2,1)])
+	dmr.end <- as.numeric(dmr.info[ifelse(is.negative,3,2)])
   	dmr.start <- min(start(anno))+dmr.start
 	dmr.end <- min(start(anno))+dmr.end
 	in.dmr <- start(anno) >= dmr.start  & start(anno) <= dmr.end

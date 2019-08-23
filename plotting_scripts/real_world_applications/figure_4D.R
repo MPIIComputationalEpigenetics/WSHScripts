@@ -1,7 +1,7 @@
 #####################################################################################################
 #' figure_4D.R
 #'---------------------------------------------------------------------------------------------------
-#' This scripts produces Figure 4G from the manuscript. You need to specify the folders, where you 
+#' This scripts produces Figure 4D from the manuscript. You need to specify the folders, where you 
 #' stored the data matrix for the Ewing data set. You should have produced the score with the scripts
 #' in ISH_scripts/real_world_applications/Ewing and then summarized the indiviudal samples to a data
 #' matrix with misc/create_data_matrix.R. Furthermore, GO and LOLA enrichment results are exported

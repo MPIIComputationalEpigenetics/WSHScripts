@@ -1,7 +1,7 @@
 #####################################################################################################
-#' figure_4F.R
+#' figure_4C.R
 #'---------------------------------------------------------------------------------------------------
-#' This scripts produces Figure 4F from the manuscript. You need to specify the folders, where you 
+#' This scripts produces Figure 4C from the manuscript. You need to specify the folders, where you 
 #' stored the data matrix for the Ewing data set. You should have produced the scores with the scripts
 #' in ISH_scripts/real_world_applications/Ewing and then summarized the individual samples to a data
 #' matrix with misc/create_data_matrix.R. For this script three inputs are required.
@@ -126,5 +126,5 @@ comp.frame$rank <- ranks
 select.cut <- auto.select.rank.cut(comp.frame$p.vals.adj.fdr,comp.frame$rank)
 
 plot <- volcano.plot(comp.frame,rank.cutoff=0.01,rerank=F)
-ggsave(file.path(plot.path,paste0("figure_4F.png")),plot,height=11,width=8.5,unit="in",dpi=300)
+ggsave(file.path(plot.path,paste0("figure_4C.png")),plot,height=11,width=8.5,unit="in",dpi=300)
 

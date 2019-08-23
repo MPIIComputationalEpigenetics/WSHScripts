@@ -1,7 +1,7 @@
 #######################################################################################################
-#' ROC_CT_heterogeneity.R
+#' ROC_negative_example.R
 #-----------------------------------------------------------------------------------------------------
-#' This script produces plots similar to Figure 2A: genome browser-like views of the WSH scores,
+#' This script produces plots similar to Figure 2E: genome browser-like views of the WSH scores,
 #' the methylation levels in individual cell types and aggregated over all cell types. Furthermore,
 #' ROC curves are produced representing the classification performance of a particular score or the
 #' average methylation level. Three paths need to be given to the script.
@@ -15,12 +15,13 @@ library(ggplot2)
 library(RnBeads)
 library(pROC)
 library(PRROC)
-folder.path <- "/TL/deep/projects/work/mscherer/projects/heterogeneity/simulation/results/correct_simulation/revision/cell_type_heterogeneity/results_pipeline/"
-plot.path <- "/TL/deep/projects/work/mscherer/projects/heterogeneity/simulation/results/analysis/correct_simulation/revision/cell_type_heterogeneity/plot/"#getwd()
-roc.path <- "/TL/deep/projects/work/mscherer/projects/heterogeneity/simulation/results/analysis/correct_simulation/revision/cell_type_heterogeneity/roc/"#getwd()
+folder.path <- "path_to_MSD_results_pipeline"
+plot.path <- "path_for_pdfs"
+roc.path <- "path_for_rocs"
 plot.type <- "pdf"
 
 folders <- list.files(folder.path,full.names = TRUE)
+folders <- folders[!grepl("lock",folders)]
 count <- 1
 roc.data <- c()
 for(file in folders){
@@ -38,6 +39,9 @@ for(file in folders){
 	next
   }
   data <- cbind(as.numeric(unlist(fdrp)),as.numeric(unlist(qfdrp)),as.numeric(unlist(pdr)))
+  if(nrow(data)<2){
+	next
+  }
   load(file.path(file,'FDRP','annotation.RData'))
   chr <- paste0("chr",substr(unlist(strsplit(file,"chr"))[2],1,2))
   chr <- gsub("_","",chr)
@@ -93,40 +97,32 @@ for(file in folders){
   repla[unique(queryHits(op))] <- entropy
   data <- data.frame(data,repla)
   colnames(data) <- c('FDRP','qFDRP','PDR','Position','MHL','Epipolymorphism','Entropy')
-  cov.files <- list.files(file.path(file,"covs"),full.names=T)
-  ct.count <- 1
-  for(ct in cov.files){
-	 meth.info <- read.table(ct,sep="\t")
-	 anno_set <- GRanges(Rle(meth.info[,1]),IRanges(start=as.numeric(meth.info[,2]),end=as.numeric(meth.info[,3])))
-	 methData <- c()
-	 for(i in 1:length(anno_set)){
-		if(i > length(anno_set)){
-			break
-		}
-		dists <- distance(anno_set[i],anno_set)
-		dists[i] <- NA
-		is.same <- which(dists==0)
-		new.meth <- mean(c(as.numeric(meth.info[i,4]),as.numeric(meth.info[is.same,4])))
-		methData <- c(methData,new.meth)
-		if(length(is.same)>0){
-			meth.info <- meth.info[-is.same,]
-			anno_set <- anno_set[-is.same]
-		}
-	 }
-	 min <- min(start(anno_set[seqnames(anno_set) %in% chr]))
-	 max <- max(end(anno_set[seqnames(anno_set) %in% chr]))
-	 op <- findOverlaps(anno,anno_set)
-	 add.data <- rep(NA,nrow(data))
-	 add.data[queryHits(op)] <- methData[subjectHits(op)]
-	 add.data <- add.data/100
-	 data <- data.frame(add.data,data)
-     if(!grepl("all_merged",ct)){
-     	colnames(data)[1] <- paste("Methylation_CT_",ct.count)
-	 	ct.count <- ct.count+1
-	 }else{
-		colnames(data)[1] <- "Methylation_Mixture"
-	 }
+  cov.files <- list.files(file.path(file,"covs"),full.names=T,pattern="all_merged")
+  meth.info <- read.table(cov.files[1],sep="\t")
+  anno_set <- GRanges(Rle(meth.info[,1]),IRanges(start=as.numeric(meth.info[,2]),end=as.numeric(meth.info[,3])))
+  methData <- c()
+  for(i in 1:length(anno_set)){
+ 	if(i > length(anno_set)){
+ 		break
+ 	}
+ 	dists <- distance(anno_set[i],anno_set)
+ 	dists[i] <- NA
+  	is.same <- which(dists==0)
+	new.meth <- mean(c(as.numeric(meth.info[i,4]),as.numeric(meth.info[is.same,4])))
+	methData <- c(methData,new.meth)
+	if(length(is.same)>0){
+		meth.info <- meth.info[-is.same,]
+		anno_set <- anno_set[-is.same]
+	}
   }
+  min <- min(start(anno_set[seqnames(anno_set) %in% chr]))
+  max <- max(end(anno_set[seqnames(anno_set) %in% chr]))
+  op <- findOverlaps(anno,anno_set)
+  add.data <- rep(NA,nrow(data))
+  add.data[queryHits(op)] <- methData[subjectHits(op)]
+  add.data <- add.data/100
+  data <- data.frame(add.data,data)
+  colnames(data)[1] <- "Methylation"
   data <- as.data.frame(data)
   melted <- melt(data,id='Position')
   colnames(melted)[2:3] <- c('Measure','Value')
@@ -134,37 +130,37 @@ for(file in folders){
   temp <- colors[2]
   colors[2] <- colors[5]
   colors[5] <- temp
-  colors <- c(colors,rep("black",ct.count))
+  colors <- c(colors,"black")
   plot <- ggplot(melted,aes(x=Position,y=Value,color=Measure,fill=Measure))+facet_grid(Measure~.)+geom_point(data=melted[grepl('Methylation',melted$Measure),],color='black',size=1)+geom_point(data=melted[!grepl('Methylation',melted$Measure),],size=0.1)+geom_bar(data=melted[!grepl('Methylation',melted$Measure),],stat='identity')+theme(panel.background = element_rect(fill='white',color='black'),text=element_text(size=20,face='bold'),panel.grid=element_blank(),legend.key = element_rect(fill='white'),legend.position = 'none',strip.text = element_text(size=12))+scale_color_manual(values=colors,guide=FALSE)+scale_fill_manual(values=colors)+
     scale_y_continuous(breaks=c(0,0.5,1))+ggtitle(chr)
 	#' If we decide to go with the second version, this information is to be found in the numCT.txt file
-	dmr.info <- readLines(file.path(file,"dmr_location.txt"))
-	is.negative <- readLines(file.path(file,"numCT.txt"))[1] == "Negative control"
-	if(is.negative){
-		plot.name <- paste0(plot.path,paste(chr,min,max,"negative",sep="_"),".",plot.type)
-	}else{
-		plot.name <- paste0(plot.path,paste(chr,min,max,sep="_"),".",plot.type)
-	}
- 	ggsave(plot.name,plot,device=plot.type,height=11,width=8.5,units="in")
-	dmr.start <- as.numeric(dmr.info[1])
-	dmr.end <- as.numeric(dmr.info[2])
-  	dmr.start <- min(start(anno))+dmr.start
-	dmr.end <- min(start(anno))+dmr.end
-	in.dmr <- start(anno) >= dmr.start  & start(anno) <= dmr.end
-	data <- data[,!(grepl("Methylation_CT",colnames(data)))]
-	data <- data[,!(grepl("Position",colnames(data)))]
-	p.vals <- apply(data,2,function(x){
-		outside <- x[!in.dmr]
-		inside <- x[in.dmr]
-		p.val <- tryCatch(t.test(inside,outside)$p.value,error=function(e)NULL)
-		if(is.null(p.val)){
-			return(NA)
-		}else if(is.na(p.val)){
-			p.val <- 1
-		}
-		p.val
-	})
-	roc.data <- rbind(roc.data,c(is.negative,p.vals))
+  dmr.info <- readLines(file.path(file,"dmr_location.txt"))
+  is.negative <- readLines(file.path(file,"is_negative.txt"))[1] == "Negative control"
+  if(is.negative){
+ 	plot.name <- paste0(plot.path,paste(chr,min,max,"negative",sep="_"),".",plot.type)
+  }else{
+	plot.name <- paste0(plot.path,paste(chr,min,max,sep="_"),".",plot.type)
+  }
+  ggsave(plot.name,plot,device=plot.type,height=11,width=8.5,units="in")
+  dmr.start <- as.numeric(dmr.info[1])
+  dmr.end <- as.numeric(dmr.info[2])
+  dmr.start <- min(start(anno))+dmr.start
+  dmr.end <- min(start(anno))+dmr.end
+  in.dmr <- start(anno) >= dmr.start  & start(anno) <= dmr.end
+  data <- data[,!(grepl("Methylation_CT",colnames(data)))]
+  data <- data[,!(grepl("Position",colnames(data)))]
+  p.vals <- apply(data,2,function(x){
+  outside <- x[!in.dmr]
+  inside <- x[in.dmr]
+  p.val <- tryCatch(t.test(inside,outside)$p.value,error=function(e)NULL)
+  if(is.null(p.val)){
+	return(NA)
+  }else if(is.na(p.val)){
+	p.val <- 1
+  }
+	p.val
+  })
+  roc.data <- rbind(roc.data,c(is.negative,p.vals))
   count <- count +1
 }
 roc.data <- as.data.frame(roc.data)
@@ -172,19 +168,6 @@ colnames(roc.data) <- c("IsNegative","Methylation",'FDRP','qFDRP','PDR','MHL','E
 line.types <- c("solid","solid", "22", "42", "44", "13", "1343")
 names(line.types) <- c("Methylation",'FDRP','qFDRP','PDR','MHL','Epipolymorphism','Entropy')
 for(score in c("Methylation",'FDRP','qFDRP','PDR','MHL','Epipolymorphism','Entropy')){
-#	t.fr <- c()
-#	for(t in seq(0,1,by=0.001)){
-#		fps <- sum(roc.data[,score]<t & roc.data$IsNegative)
-#		fns <- sum(roc.data[,score]>t & !(roc.data$IsNegative))
-#		tps <- sum(roc.data[,score]<t & !(roc.data$IsNegative))
-#		tns <- sum(roc.data[,score]>t & roc.data$IsNegative)
-#		tpr <- tps/(tps+fns)
-#		fpr <- fps/(fps+tns)
-#		t.fr <- rbind(t.fr,c(tpr,fpr))
-#	}
-#	colnames(t.fr) <- c("TPR","FPR")
-#	t.fr <- as.data.frame(t.fr)
-#	plot <- ggplot(t.fr,aes(x=FPR,y=TPR))+geom_line()+geom_abline(intercept=0,slope=1)+theme_bw()
 	roc.obj <- roc(response=!roc.data$IsNegative,predictor=1-roc.data[,score])
 	pdf(paste0(roc.path,"/",score,".pdf"),height=11,width=8.5)
 	plot(roc.obj,print.auc=T,lty=line.types[score])
