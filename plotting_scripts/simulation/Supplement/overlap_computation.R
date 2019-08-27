@@ -7,7 +7,7 @@
 ## sufficently large coverage
 ########################################################################################################################
 
-all.folders <- c(list.files("path_to_CT_hetero_results_pipeline",full.names=T),list.files("path_to_sample_purity_results_pipeline"
+all.folders <- c(list.files("path_to_CT_hetero_results_pipeline/",full.names=T),list.files("path_to_sample_purity_results_pipeline"
 ,full.names=T),list.files("path_to_ASM_results_pipeline",full.names=T),list.files("path_to_erosion_results_pipeline",full.names=T),list.files("path_to_MSD_results_pipeline",full.names=T))
 
 #' loading the required packages
@@ -74,98 +74,6 @@ toCpGs <- function(index,match_read_cpg,starts_cpgs,starts_reads,seqs_reads){
 }
 
 #' compute.discordant
-#' This function restricts a read to those CpG sites that are at most WINDOW.SIZE away from one
-#' another.
-#'
-#' @param positions:	positions of the CpG sites in the read of interest
-#' @param cpg:			position of the CpG site of interest
-#' @return:				positions of the CpG sites that are at most WINDOW.SIZE away from one
-#'						another
-#'
-#' @author Michael Scherer
-
-restrict <- function(positions,cpg){
-	#' We only restrict something, if the read is longer than 50 bp
-	if(!any(positions == cpg)) return(NA)
-	distances <- abs(as.numeric(positions)-as.numeric(cpg))
-	positions <- positions[distances<=WINDOW.SIZE]
-	if((as.numeric(positions)[length(positions)]-as.numeric(positions)[1])>WINDOW.SIZE){
-		distances <- distances[distances<=WINDOW.SIZE]
-		end <- length(distances)
-		remove <- rep(FALSE,end)
-		pos <- match(cpg,positions)
-		if(is.na(pos)){
-			return(NA)
-		}
-		i.left <- pos-1
-		i.right <- pos+1
-		finished.left <- FALSE
-		finished.right <- FALSE
-		while((!finished.left) || (!finished.right)){
-			left <- distances[i.left]
-			right <- distances[i.right]
-			if(finished.left){
-				i.right <- i.right + 1
-				if(i.right > end){
-					finished.right <- TRUE
-					i.right <- end
-					next
-				}
-				right <- distances[i.right]
-				if(WINDOW.SIZE < (left + right)){
-					remove[i.right:end] <- TRUE
-					finished.right <- TRUE
-					i.right <- max(which(!remove))
-				}
-			}else if (finished.right){
-				i.left <- i.left - 1
-				if(i.left < 1){
-					finished.left <- TRUE
-					i.left <- 1
-					next
-				}
-				left <- distances[i.left]
-				if(WINDOW.SIZE < (left + right)){
-					remove[1:i.left] <- TRUE
-					finished.left <- TRUE
-					i.left <- min(which(!remove))
-				}
-			}else{
-				if((left < right) || all(remove[i.right:end])){
-					i.left <- i.left - 1
-					if(i.left < 1){
-						finished.left <- TRUE
-						i.left <- 1
-						next
-					}
-					left <- distances[i.left]
-					if(WINDOW.SIZE < (left + right)){
-						remove[1:i.left] <- TRUE
-						finished.left <- TRUE
-						i.left <- min(which(!remove))
-					}
-				}else{
-					i.right <- i.right + 1
-					if(i.right > end){
-						finished.right <- TRUE
-						i.right <- end
-						next
-					}
-					right <- distances[i.right]
-					if(WINDOW.SIZE < (left + right)){
-						remove[i.right:end] <- TRUE
-						finished.right <- TRUE
-						i.right <- max(which(!remove))
-					}
-				}
-			}
-		}
-		positions <- positions[!remove]
-	}
-	positions
-}
-
-#' compute.discordant
 #' This function decides for a given read pair if it is discordant or not.
 #'
 #' @param index:	index of the read pair
@@ -205,7 +113,6 @@ compute.discordant <- function(index,read1,read2,values,site){
 	names1 <- names(v1)
 	names2 <- names(v2)
 	both <- intersect(names1,names2)
-	both <- restrict(both,site)
 	if(any(is.na(both))){
 		return(NA)
 	}
@@ -428,7 +335,8 @@ calculate.qfdrps<- function(bam_file,anno,path,output_name,cores=1,window.size){
 }
 
 all.ops <- list()
-for(min.op in seq(10,50,by=5)){
+parallel.setup(10)
+all.ops <- foreach(min.op=seq(10,100,by=5)) %dopar%{
 	sel.files <- all.folders[sample(1:length(all.folders),1000)]
 	avg.cpg.in.overlap <- c()
 	for(fold in sel.files){
@@ -441,12 +349,12 @@ for(min.op in seq(10,50,by=5)){
 		anno <- makeGRangesFromDataFrame(anno)
 		avg.cpg.in.overlap <- c(avg.cpg.in.overlap,tryCatch(calculate.qfdrps.chromosome(bam.file,anno,min.op=min.op),error=function(e)NA))
 	}
-	all.ops[[min.op]] <- avg.cpg.in.overlap
+	avg.cpg.in.overlap
 }
 
 stats <- lapply(all.ops,function(x){
 	c(Avg=mean(x,na.rm=T),SD=sd(x,na.rm=T))
 })
-stats.frame <- data.frame(min.overlap=seq(10,50,by=5),t(as.data.frame(stats[seq(10,50,by=5)])))
+stats.frame <- data.frame(min.overlap=seq(10,100,by=5),t(as.data.frame(stats[1:19])))
 plot <- ggplot(stats.frame,aes(x=min.overlap,y=Avg,ymin=Avg-SD,ymax=Avg+SD))+geom_point()+geom_errorbar()+geom_line()+theme_bw()+theme(panel.grid=element_blank(),axis.text=element_text(size=20),axis.title=element_text(size=20),axis.ticks=element_line(size=0.5))+ylab("Average number of CpGs in overlap")+xlab("Minimum overlap [bp]")
 
