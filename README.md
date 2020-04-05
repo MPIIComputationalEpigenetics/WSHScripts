@@ -10,9 +10,9 @@ Contains scripts that are used in various occassions by the pipelines, for insta
 
 Contains R scripts needed to reproduce the plots/analysis from the publication, both for synthetic and biological data.
 
-### [real_world_application](real_world_application/)
+### [real_world_applications](real_world_applications/)
 
-Contains the scripts for the calculation on the two RRBS data sets, i.e. the [healthy blood data set](real_world_application/KielCohort) and the [Ewing sarcoma cancer example](real_world_application/Ewing).
+Contains the scripts for the calculation on the two RRBS data sets, i.e. the [healthy blood data set](real_world_applications/KielCohort) and the [Ewing sarcoma cancer example](real_world_applications/Ewing).
 
 ### [scores](scores/)
 
