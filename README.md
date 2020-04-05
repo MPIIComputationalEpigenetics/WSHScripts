@@ -2,7 +2,7 @@
 
 This repository contains all scripts relevant to reproduce the results in Scherer M., et al., *Quantitative comparison of within-sample heterogeneity scores for DNA methylation data* , Nucleic Acids Research, 2020, [10.1093/nar/gkaa120](https://doi.org/10.1093/nar/gkaa120). These scores are qFDRP, FDRP, PDR, MHL, Epipolymorphism and Entropy. The repository contains the following folders:
 
-### misc
+### [misc](misc/)
 
 Contains scripts that are used in various occassions by the pipelines, for instance to add a methylation call string (similar to bismark) to a bam file.
 
