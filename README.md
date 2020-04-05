@@ -6,19 +6,19 @@ This repository contains all scripts relevant to reproduce the results in Schere
 
 Contains scripts that are used in various occassions by the pipelines, for instance to add a methylation call string (similar to bismark) to a bam file.
 
-### plotting_scripts
+### [plotting_scripts](plotting_scripts/)
 
 Contains R scripts needed to reproduce the plots/analysis from the publication, both for synthetic and biological data.
 
-### real_world_application
+### [real_world_application](real_world_application/)
 
-Contains the scripts for the calculation on the two RRBS data sets, i.e. the healthy blood data set and the Ewing sarcoma cancer example (Ewing).
+Contains the scripts for the calculation on the two RRBS data sets, i.e. the [healthy blood data set](real_world_application/KielCohort) and the [Ewing sarcoma cancer example](real_world_application/Ewing).
 
-### scores
+### [scores](scores/)
 
 Contains the implementation of the scores.
 
-### simulation
+### [simulation](simulation/)
 
 Contains the pipelines used to compare the WSH scores on synthetic data.
 
