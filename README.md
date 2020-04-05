@@ -1,6 +1,6 @@
 ## Introduction
 
-This repository contains all scripts relevant to reproduce the results in **Quantitative comparison of Within-Sample Heterogeneity Scores for DNA Methylation Data**. These scores are qFDRP, FDRP, PDR, MHL, Epipolymorphism and Entropy. The repository contains the following folders:
+This repository contains all scripts relevant to reproduce the results in Scherer M., et al., *Quantitative comparison of within-sample heterogeneity scores for DNA methylation data* , Nucleic Acids Research, 2020, [https://doi.org/10.1093/nar/gkaa120](10.1093/nar/gkaa120). These scores are qFDRP, FDRP, PDR, MHL, Epipolymorphism and Entropy. The repository contains the following folders:
 
 ### misc
 
