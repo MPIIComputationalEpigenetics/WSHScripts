@@ -82,84 +82,20 @@ toCpGs <- function(index,match_read_cpg,starts_cpgs,starts_reads,seqs_reads){
 #' @author Michael Scherer
 
 restrict <- function(positions,cpg){
-	#' We only restrict something, if the read is longer than 50 bp
-	if(!any(positions == cpg)) return(NA)
-	distances <- abs(as.numeric(positions)-as.numeric(cpg))
-	positions <- positions[distances<=WINDOW.SIZE]
-	if((as.numeric(positions)[length(positions)]-as.numeric(positions)[1])>WINDOW.SIZE){
-		distances <- distances[distances<=WINDOW.SIZE]
-		end <- length(distances)
-		remove <- rep(FALSE,end)
-		pos <- match(cpg,positions)
-		if(is.na(pos)){
-			return(NA)
-		}
-		i.left <- pos-1
-		i.right <- pos+1
-		finished.left <- FALSE
-		finished.right <- FALSE
-		while((!finished.left) || (!finished.right)){
-			left <- distances[i.left]
-			right <- distances[i.right]
-			if(finished.left){
-				i.right <- i.right + 1
-				if(i.right > end){
-					finished.right <- TRUE
-					i.right <- end
-					next
-				}
-				right <- distances[i.right]
-				if(WINDOW.SIZE < (left + right)){
-					remove[i.right:end] <- TRUE
-					finished.right <- TRUE
-					i.right <- max(which(!remove))
-				}
-			}else if (finished.right){
-				i.left <- i.left - 1
-				if(i.left < 1){
-					finished.left <- TRUE
-					i.left <- 1
-					next
-				}
-				left <- distances[i.left]
-				if(WINDOW.SIZE < (left + right)){
-					remove[1:i.left] <- TRUE
-					finished.left <- TRUE
-					i.left <- min(which(!remove))
-				}
-			}else{
-				if((left < right) || all(remove[i.right:end])){
-					i.left <- i.left - 1
-					if(i.left < 1){
-						finished.left <- TRUE
-						i.left <- 1
-						next
-					}
-					left <- distances[i.left]
-					if(WINDOW.SIZE < (left + right)){
-						remove[1:i.left] <- TRUE
-						finished.left <- TRUE
-						i.left <- min(which(!remove))
-					}
-				}else{
-					i.right <- i.right + 1
-					if(i.right > end){
-						finished.right <- TRUE
-						i.right <- end
-						next
-					}
-					right <- distances[i.right]
-					if(WINDOW.SIZE < (left + right)){
-						remove[i.right:end] <- TRUE
-						finished.right <- TRUE
-						i.right <- max(which(!remove))
-					}
-				}
-			}
-		}
-		positions <- positions[!remove]
-	}
-	positions
+  if(!any(positions == cpg)) return(NA)
+  distances <- abs(as.numeric(positions)-as.numeric(cpg))
+  positions <- positions[distances<=get.option('window.size')]
+  all.valid.intervals <- sapply(min(as.numeric(positions)):max(as.numeric(positions)),function(x){
+    interval <- x:(x+(get.option('window.size')-1))
+    if(max(interval)>max(positions)) return(NULL)
+    if(!(cpg%in%interval)) return(NULL)
+    c(x,x+(get.option('window.size')-1),sum(interval%in%positions))
+  })
+  all.valid.intervals <- all.valid.intervals[sapply(all.valid.intervals,function(x)!is.null(x))]
+  interval.info <- t(as.data.frame(all.valid.intervals))
+  sel.interval <- interval.info[which.max(interval.info[,3]),]
+  positions <- positions[as.numeric(positions)>=sel.interval[1]&as.numeric(positions)<=sel.interval[2]]
+  return(positions)
 }
 
 #' compute.discordant
