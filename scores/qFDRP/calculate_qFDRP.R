@@ -140,6 +140,9 @@ compute.discordant <- function(index,read1,read2,values,site){
 	names2 <- names(v2)
 	both <- intersect(names1,names2)
 	both <- restrict(both,site)
+    if(length(both)<2){
+        return(NA)
+    }
 	if(any(is.na(both))){
 		return(NA)
 	}
